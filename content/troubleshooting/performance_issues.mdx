@@ -1,0 +1,113 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Performance Issues
+
+Troubleshooting performance problems in nextra-docs-starter-plus.
+
+## Performance Issues
+
+**Symptoms:**
+- Slow page loads
+- Large bundle sizes
+- Poor search performance
+
+**Solutions:**
+
+### Optimize Images
+
+Use Next.js Image component:
+
+```jsx
+import Image from 'next/image'
+
+// Instead of
+<img src="/large-image.jpg" alt="Image" />
+
+// Use
+<Image
+  src="/large-image.jpg"
+  alt="Image"
+  width={800}
+  height={600}
+  quality={85}
+/>
+```
+
+### Check Bundle Size
+
+Analyze bundle size:
+
+```bash
+# Install bundle analyzer
+npm install --save-dev @next/bundle-analyzer
+
+# Analyze bundle
+ANALYZE=true npm run build
+```
+
+### Optimize Search Index
+
+Exclude unnecessary content from search:
+
+```javascript
+// next.config.pagefind.mjs
+export default {
+  pagefind: {
+    excludeSelectors: [
+      '.nextra-sidebar',
+      '.nextra-toc',
+      'nav',
+      'header',
+      'footer',
+      '[data-pagefind-ignore]'
+    ]
+  }
+}
+```
+
+### Performance Optimization Tips
+
+**Code splitting:**
+```javascript
+// Use dynamic imports for large components
+import dynamic from 'next/dynamic'
+
+const HeavyComponent = dynamic(() => import('../components/HeavyComponent'), {
+  loading: () => <p>Loading...</p>
+})
+```
+
+**Reduce JavaScript bundle size:**
+```javascript
+// Import only what you need
+import { debounce } from 'lodash/debounce'
+// Instead of
+import _ from 'lodash'
+```
+
+**Optimize fonts:**
+```javascript
+// Use Next.js font optimization
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'] })
+```
+
+### Monitor Performance
+
+**Web Vitals:**
+```javascript
+// pages/_app.js
+export function reportWebVitals(metric) {
+  console.log(metric)
+}
+```
+
+**Lighthouse audits:**
+- Run Lighthouse in Chrome DevTools
+- Focus on Core Web Vitals (LCP, FID, CLS)
+- Address performance recommendations
+
+<Callout type="info">
+  Performance issues often stem from unoptimized images and large JavaScript bundles. Use Next.js built-in optimizations like Image component and dynamic imports to improve performance.
+</Callout> 

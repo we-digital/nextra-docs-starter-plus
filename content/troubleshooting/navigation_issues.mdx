@@ -1,0 +1,108 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Navigation Issues
+
+Troubleshooting navigation and menu problems in nextra-docs-starter-plus.
+
+## Navigation Issues
+
+**Symptoms:**
+- Navigation not updating
+- Pages not appearing in menu
+- Wrong page order
+
+**Solutions:**
+
+### Update _meta.js Files
+
+Check navigation configuration:
+
+```javascript
+// content/_meta.js
+export default {
+  index: "Home",
+  "getting-started": "Getting Started",
+  "troubleshooting": "Troubleshooting",
+  // Add your pages here
+}
+```
+
+### File Naming
+
+Ensure file names match navigation keys:
+
+```
+content/
+├── index.mdx           # matches "index"
+├── getting-started.mdx # matches "getting-started"
+└── troubleshooting.mdx # matches "troubleshooting"
+```
+
+### Restart Development Server
+
+Navigation changes require server restart:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Common Navigation Fixes
+
+**Nested navigation structure:**
+```javascript
+// content/docs/_meta.js
+export default {
+  "getting-started": {
+    title: "Getting Started",
+    type: "page"
+  },
+  "api": {
+    title: "API Reference",
+    type: "page"
+  },
+  "guides": {
+    title: "Guides",
+    type: "folder"
+  }
+}
+```
+
+**Page ordering:**
+```javascript
+// Use numbers for explicit ordering
+export default {
+  "01-introduction": "Introduction",
+  "02-installation": "Installation", 
+  "03-configuration": "Configuration"
+}
+```
+
+**Hidden pages:**
+```javascript
+// Hide pages from navigation
+export default {
+  index: "Home",
+  "hidden-page": {
+    title: "Hidden Page",
+    display: "hidden"
+  }
+}
+```
+
+<Callout type="warning">
+  Navigation changes in `_meta.js` files require a development server restart to take effect. Make sure to restart your server after making navigation changes.
+</Callout> 

@@ -1,0 +1,129 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Deployment Issues
+
+Troubleshooting deployment problems in nextra-docs-starter-plus.
+
+## Deployment Issues
+
+**Symptoms:**
+- Deployment fails
+- Environment variables not working in production
+- Site not accessible after deployment
+
+**Solutions:**
+
+### Check Platform-Specific Requirements
+
+Each platform has specific requirements:
+
+**Vercel:**
+- Ensure environment variables are set in dashboard
+- Check build logs for errors
+- Verify domain configuration
+
+**Netlify:**
+- Check build settings match requirements
+- Verify publish directory is correct
+- Review deploy logs
+
+**Railway/Other platforms:**
+- Check build commands
+- Verify environment variables
+- Review platform-specific documentation
+
+### Test Build Locally
+
+Test the production build locally:
+
+```bash
+# Build for production
+npm run build
+
+# Serve built files (if using static export)
+npx serve out
+
+# Or start production server
+npm start
+```
+
+### Environment Variables
+
+Verify environment variables in production:
+
+```javascript
+// Add debug logging
+console.log('Environment check:', {
+  hasSessionSecret: !!process.env.SESSION_SECRET,
+  hasAuthConfig: !!(
+    process.env.AUTH_USERNAME || 
+    process.env.AUTH_USERS || 
+    process.env.AUTH_USERS_JSON
+  ),
+  nodeEnv: process.env.NODE_ENV
+})
+```
+
+### Common Deployment Fixes
+
+**Build configuration:**
+```json
+// package.json
+{
+  "scripts": {
+    "build": "next build",
+    "start": "next start",
+    "export": "next build && next export"
+  }
+}
+```
+
+**Static export issues:**
+```javascript
+// next.config.mjs
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  }
+}
+```
+
+**Node.js version:**
+```json
+# package.json - specify Node.js version
+{
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+```
+
+### Platform-Specific Fixes
+
+**Vercel:**
+```json
+// vercel.json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "out",
+  "installCommand": "npm install"
+}
+```
+
+**Netlify:**
+```toml
+# netlify.toml
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "18"
+```
+
+<Callout type="warning">
+  Always test your production build locally before deploying. Many deployment issues can be caught early by running `npm run build` and testing the built application locally.
+</Callout> 

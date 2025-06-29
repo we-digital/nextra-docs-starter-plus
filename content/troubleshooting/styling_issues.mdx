@@ -1,0 +1,107 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Styling Issues
+
+Troubleshooting CSS and styling problems in nextra-docs-starter-plus.
+
+## Styling Issues
+
+**Symptoms:**
+- Styles not loading
+- Layout broken
+- Custom styles not applying
+
+**Solutions:**
+
+### Clear Browser Cache
+
+Clear browser cache to reload styles:
+
+```bash
+# Or use hard refresh
+# Ctrl+F5 (Windows/Linux)
+# Cmd+Shift+R (Mac)
+```
+
+### Check CSS Files
+
+Verify CSS files are properly imported:
+
+```javascript
+// app/layout.jsx
+import '../styles/custom.css'
+import '../styles/login.css'
+```
+
+### Verify No Conflicting Styles
+
+Check for conflicting CSS rules:
+
+```css
+/* Check for !important overrides */
+.my-class {
+  color: red !important; /* This might override other styles */
+}
+
+/* Use specific selectors instead */
+.nextra-container .my-class {
+  color: red;
+}
+```
+
+### Restart Development Server
+
+Restart the server to reload CSS:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Check CSS Specificity
+
+Ensure your custom styles have proper specificity:
+
+```css
+/* Low specificity - might be overridden */
+.button {
+  background: blue;
+}
+
+/* Higher specificity - more likely to work */
+.nextra-content .button {
+  background: blue;
+}
+
+/* Nextra v4 specific utility classes */
+.x\:button {
+  background: blue;
+}
+```
+
+### Debug CSS Loading
+
+Check if CSS files are loading in browser DevTools:
+
+1. Open DevTools (F12)
+2. Go to Network tab
+3. Reload page
+4. Look for CSS files - they should load without errors
+5. Check Console tab for CSS-related errors
+
+<Callout type="warning">
+  Nextra v4 uses utility classes with the `x:` prefix. Make sure to integrate your custom styles properly with Nextra's styling system.
+</Callout> 

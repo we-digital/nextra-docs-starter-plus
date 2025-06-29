@@ -1,0 +1,112 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Authentication Issues
+
+Troubleshooting authentication problems in nextra-docs-starter-plus.
+
+## Authentication Not Working
+
+**Symptoms:**
+- Login page doesn't appear
+- Login attempts fail with valid credentials
+- Redirects not working properly
+
+**Solutions:**
+
+### Check Environment Variables
+
+Verify all required environment variables are set:
+
+<Tabs items={['Single User', 'Multiple Users', 'JSON Users']}>
+  <Tabs.Tab>
+    ```bash
+    # Required for single user setup
+    SESSION_SECRET=your-generated-secret-key
+    AUTH_USERNAME=your-username
+    AUTH_PASSWORD=your-password
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Required for multiple users
+    SESSION_SECRET=your-generated-secret-key
+    AUTH_USERS=user1:pass1,user2:pass2
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Required for JSON users
+    SESSION_SECRET=your-generated-secret-key
+    AUTH_USERS_JSON={"admin":{"password":"pass","roles":["admin"]}}
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Verify Session Secret
+
+Generate a new session secret if needed:
+
+```bash
+# Generate a new session secret
+openssl rand -base64 32
+```
+
+### Check Middleware Configuration
+
+Ensure `middleware.ts` is properly configured:
+
+```typescript
+// middleware.ts
+export const config = {
+  matcher: [
+    '/protected/(.*)',
+    // Add your protected routes here
+  ],
+}
+```
+
+### Restart Development Server
+
+After changing environment variables:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    # Stop the server (Ctrl+C) then restart
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Stop the server (Ctrl+C) then restart
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Stop the server (Ctrl+C) then restart
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Debug Authentication
+
+Add debug logging to your authentication code:
+
+```javascript
+// Add debug logging
+console.log('Environment check:', {
+  hasSessionSecret: !!process.env.SESSION_SECRET,
+  hasAuthConfig: !!(
+    process.env.AUTH_USERNAME || 
+    process.env.AUTH_USERS || 
+    process.env.AUTH_USERS_JSON
+  ),
+  nodeEnv: process.env.NODE_ENV
+})
+```
+
+<Callout type="warning">
+  Remember to restart your development server after changing environment variables. Environment variable changes require a server restart to take effect.
+</Callout> 

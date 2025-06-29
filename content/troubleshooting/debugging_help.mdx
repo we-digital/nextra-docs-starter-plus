@@ -1,0 +1,174 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Debugging & Help
+
+Advanced debugging techniques and getting help for nextra-docs-starter-plus.
+
+## Debug Mode
+
+Enable debug mode for detailed logging:
+
+### Development Debug
+
+```bash
+# Enable debug logging
+DEBUG=true npm run dev
+```
+
+### Custom Debug Logging
+
+Add debug logging to your code:
+
+```javascript
+// lib/debug.js
+export const debug = (message, data) => {
+  if (process.env.DEBUG === 'true') {
+    console.log(`[DEBUG] ${message}`, data ? JSON.stringify(data, null, 2) : '')
+  }
+}
+
+// Usage
+import { debug } from './lib/debug'
+
+debug('Authentication attempt', { username, timestamp: Date.now() })
+```
+
+## Browser Developer Tools
+
+Use browser tools for debugging:
+
+### Console Debugging
+
+Check browser console for errors:
+
+```javascript
+// Check for JavaScript errors
+// Open browser console (F12)
+// Look for red error messages
+
+// Network tab
+// Check for failed requests
+// Verify API calls are successful
+
+// Application tab
+// Check localStorage/sessionStorage
+// Verify cookies are set correctly
+```
+
+### Network Debugging
+
+Monitor network requests:
+
+1. **Open DevTools** (F12)
+2. **Go to Network tab**
+3. **Reload page**
+4. **Check for failed requests** (red status codes)
+5. **Verify API endpoints** are responding correctly
+
+## Getting Help
+
+### Documentation Resources
+
+- 📖 [Nextra Documentation](https://nextra.site/docs)
+- ⚡ [Next.js Documentation](https://nextjs.org/docs)
+- ⚛️ [React Documentation](https://react.dev)
+
+### Community Support
+
+- 🐙 [GitHub Issues](https://github.com/we-digital/nextra-docs-starter-plus/issues)
+- 💬 [Nextra Discord](https://discord.gg/hEM84NMkRv)
+- 🌟 [Next.js Discussions](https://github.com/vercel/next.js/discussions)
+
+### Creating a Bug Report
+
+When reporting issues, include:
+
+#### System Information
+
+```bash
+# Node.js version
+node --version
+
+# Package manager version
+npm --version
+# or
+pnpm --version
+# or
+yarn --version
+
+# Operating system
+# Windows 10, macOS 12, Ubuntu 20.04, etc.
+```
+
+#### Error Information
+
+- **Exact error message** - Copy the full error text
+- **Steps to reproduce** - How to trigger the issue
+- **Expected behavior** - What should happen
+- **Actual behavior** - What actually happens
+- **Browser information** - Browser version and type
+
+#### Code Examples
+
+Include relevant code snippets:
+
+```mdx
+<!-- Problematic MDX content -->
+# My Page
+
+This content causes the issue...
+```
+
+```javascript
+// Problematic JavaScript code
+const problematicFunction = () => {
+  // Code that causes the issue
+}
+```
+
+### Before Asking for Help
+
+1. **Check this troubleshooting guide** first
+2. **Search existing issues** on GitHub
+3. **Try basic solutions** (restart server, clear cache)
+4. **Test with minimal reproduction** case
+5. **Gather all relevant information** before posting
+
+## Quick Fixes Reference
+
+### Common Commands
+
+```bash
+# Restart development server
+npm run dev
+
+# Clear cache and rebuild
+rm -rf .next && npm run build
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json && npm install
+
+# Generate new session secret
+openssl rand -base64 32
+
+# Check for updates
+npm outdated
+
+# Update packages
+npm update
+```
+
+### Environment Variables Template
+
+```bash
+# .env.local template
+SESSION_SECRET=your-32-character-random-string
+AUTH_USERNAME=admin
+AUTH_PASSWORD=your-secure-password
+# AUTH_USERS=user1:pass1,user2:pass2
+# SKIP_AUTH=true  # For development only
+```
+
+<Callout type="info">
+  Most issues can be resolved by restarting the development server, clearing cache, or checking environment variables. Try these simple fixes first before diving into complex debugging.
+</Callout> 

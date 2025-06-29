@@ -1,0 +1,117 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Build Failures
+
+Troubleshooting build process failures in nextra-docs-starter-plus.
+
+## Build Failures
+
+**Symptoms:**
+- Build process fails
+- TypeScript errors
+- Missing dependencies
+
+**Solutions:**
+
+### Install Dependencies
+
+Ensure all dependencies are installed:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    # Clean install
+    rm -rf node_modules pnpm-lock.yaml
+    pnpm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Clean install
+    rm -rf node_modules package-lock.json
+    npm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Clean install
+    rm -rf node_modules yarn.lock
+    yarn install
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Check Node.js Version
+
+Verify Node.js version compatibility:
+
+```bash
+# Check current version
+node --version
+
+# Should be 18.x or higher
+# Update Node.js if needed
+```
+
+### Fix TypeScript Errors
+
+Common TypeScript fixes:
+
+```typescript
+// Fix: Property does not exist on type
+// Add proper type definitions
+interface User {
+  username: string
+  password: string
+  displayName?: string
+}
+
+// Fix: Cannot find module
+// Check import paths
+import { Component } from '../components/Component'
+// vs
+import { Component } from './components/Component'
+```
+
+### Check Build Logs
+
+Review build logs for specific errors:
+
+```bash
+# Run build with verbose output
+npm run build --verbose
+
+# Check for specific error messages
+# and address them individually
+```
+
+### Common Build Fixes
+
+**Memory issues:**
+```bash
+# Increase Node.js memory limit
+NODE_OPTIONS="--max-old-space-size=4096" npm run build
+```
+
+**Next.js cache issues:**
+```bash
+# Clear Next.js cache
+rm -rf .next
+npm run build
+```
+
+**TypeScript strict mode issues:**
+```typescript
+// Temporarily disable strict checks if needed
+// tsconfig.json
+{
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false
+  }
+}
+```
+
+<Callout type="info">
+  Most build failures are caused by missing dependencies or Node.js version incompatibility. Always check these first before diving into complex debugging.
+</Callout> 

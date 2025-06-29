@@ -1,0 +1,101 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Search Issues
+
+Troubleshooting search functionality problems in nextra-docs-starter-plus.
+
+## Search Not Working
+
+**Symptoms:**
+- Search results not appearing
+- Search index not found
+- Search functionality missing
+
+**Solutions:**
+
+### Rebuild Search Index
+
+Run the build command to generate search index:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm build
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run build
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn build
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Check Pagefind Files
+
+Verify that Pagefind files are generated:
+
+```bash
+# Check if search index exists
+ls -la public/_pagefind/
+
+# Should contain files like:
+# pagefind.js
+# pagefind-entry.json
+# Various .pf files
+```
+
+### Clear Build Cache
+
+Clear Next.js cache and rebuild:
+
+```bash
+# Remove build artifacts
+rm -rf .next
+rm -rf out
+rm -rf public/_pagefind
+
+# Rebuild
+npm run build
+```
+
+### Check Content Exclusion
+
+Ensure content isn't excluded from search:
+
+```mdx
+<!-- Make sure content doesn't have data-pagefind-ignore -->
+# This content will be searchable
+
+<div data-pagefind-ignore>
+  This content will be excluded from search
+</div>
+```
+
+### Optimize Search Index
+
+Exclude unnecessary content from search:
+
+```javascript
+// next.config.pagefind.mjs
+export default {
+  pagefind: {
+    excludeSelectors: [
+      '.nextra-sidebar',
+      '.nextra-toc',
+      'nav',
+      'header',
+      'footer',
+      '[data-pagefind-ignore]'
+    ]
+  }
+}
+```
+
+<Callout type="info">
+  The search index is generated during the build process. Make sure to rebuild your project after making content changes for search to work properly.
+</Callout> 
