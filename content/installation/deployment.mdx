@@ -1,0 +1,587 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Deployment
+
+Deploy your documentation site to various platforms with ease. This guide covers deployment options from simple static hosting to full-featured platforms.
+
+## Vercel (Recommended)
+
+Vercel is the recommended deployment platform for Next.js applications, offering seamless integration and automatic deployments.
+
+### Quick Setup
+
+1. **Push to GitHub** - Commit your code to a GitHub repository
+2. **Connect to Vercel** - Import your repository at [vercel.com](https://vercel.com)
+3. **Configure Environment Variables** - Add your environment variables
+4. **Deploy** - Vercel will automatically build and deploy
+
+### Step-by-Step Guide
+
+#### 1. Prepare Your Repository
+
+Ensure your code is committed and pushed to GitHub:
+
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+```
+
+#### 2. Import to Vercel
+
+1. Visit [vercel.com](https://vercel.com) and sign in
+2. Click "New Project"
+3. Import your GitHub repository
+4. Vercel will automatically detect Next.js settings
+
+#### 3. Configure Environment Variables
+
+Add your environment variables in Vercel dashboard:
+
+- `SESSION_SECRET` - Your secure session secret
+- `AUTH_USERNAME` - Single user username (if using single user auth)
+- `AUTH_PASSWORD` - Single user password (if using single user auth)
+- `AUTH_USERS` - Multiple users string (if using multiple users)
+- `AUTH_USERS_JSON` - JSON user configuration (if using advanced auth)
+
+#### 4. Deploy
+
+Click "Deploy" and Vercel will:
+- Build your application
+- Generate the search index
+- Deploy to a global CDN
+- Provide a live URL
+
+### Custom Domain
+
+Set up a custom domain:
+
+1. **Add Domain** - In Vercel dashboard, go to your project settings
+2. **Configure DNS** - Point your domain to Vercel's servers
+3. **SSL Certificate** - Vercel automatically provisions SSL certificates
+
+### Automatic Deployments
+
+Vercel automatically deploys when you push to your repository:
+
+- **Main branch** - Deploys to production
+- **Feature branches** - Creates preview deployments
+- **Pull requests** - Generates preview URLs for testing
+
+## Netlify
+
+Netlify offers another excellent hosting option with great performance and features.
+
+### Deployment Steps
+
+#### 1. Connect Repository
+
+1. Sign in to [netlify.com](https://netlify.com)
+2. Click "New site from Git"
+3. Choose your Git provider and repository
+4. Configure build settings
+
+#### 2. Build Configuration
+
+Configure the build settings:
+
+<Tabs items={['Build Settings', 'netlify.toml']}>
+  <Tabs.Tab>
+    ```
+    Build command: npm run build
+    Publish directory: out
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```toml
+    [build]
+      command = "npm run build"
+      publish = "out"
+    
+    [build.environment]
+      NODE_VERSION = "18"
+    
+    [[redirects]]
+      from = "/*"
+      to = "/index.html"
+      status = 200
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### 3. Environment Variables
+
+Add environment variables in Netlify dashboard:
+
+- Go to Site settings → Environment variables
+- Add all necessary variables (SESSION_SECRET, AUTH_* variables)
+
+#### 4. Deploy
+
+Netlify will automatically build and deploy your site.
+
+## Railway
+
+Railway provides a modern platform for deploying full-stack applications.
+
+### Setup Process
+
+1. **Connect Repository** - Link your GitHub repository to Railway
+2. **Configure Environment** - Add environment variables
+3. **Deploy** - Railway automatically builds and deploys
+
+### Configuration
+
+Create a `railway.toml` file:
+
+```toml
+[build]
+  builder = "NIXPACKS"
+
+[deploy]
+  startCommand = "npm start"
+  healthcheckPath = "/"
+  healthcheckTimeout = 100
+  restartPolicyType = "ON_FAILURE"
+  restartPolicyMaxRetries = 10
+```
+
+## DigitalOcean App Platform
+
+Deploy to DigitalOcean's App Platform for reliable hosting.
+
+### Deployment Configuration
+
+Create an app spec:
+
+```yaml
+name: docs-site
+services:
+- name: web
+  source_dir: /
+  github:
+    repo: your-username/your-repo
+    branch: main
+  run_command: npm start
+  environment_slug: node-js
+  instance_count: 1
+  instance_size_slug: basic-xxs
+  envs:
+  - key: SESSION_SECRET
+    value: your-session-secret
+  - key: AUTH_USERNAME
+    value: your-username
+  routes:
+  - path: /
+static_sites:
+- name: static-site
+  source_dir: /
+  github:
+    repo: your-username/your-repo
+    branch: main
+  build_command: npm run build
+  output_dir: /out
+```
+
+## AWS Amplify
+
+Deploy to AWS Amplify for integration with AWS services.
+
+### Setup Process
+
+1. **Connect Repository** - Link your GitHub repository
+2. **Configure Build** - Set up build settings
+3. **Environment Variables** - Add required variables
+4. **Deploy** - AWS Amplify handles the rest
+
+### Build Configuration
+
+Create `amplify.yml`:
+
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: out
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+```
+
+## Static Hosting
+
+For simple static hosting without server-side features.
+
+### GitHub Pages
+
+Deploy to GitHub Pages for free static hosting:
+
+1. **Enable GitHub Pages** - In repository settings
+2. **Configure Build** - Use GitHub Actions for automated builds
+3. **Deploy** - Push to trigger deployment
+
+#### GitHub Actions Workflow
+
+Create `.github/workflows/deploy.yml`:
+
+```yaml
+name: Build and Deploy
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Node
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./out
+```
+
+### Other Static Hosts
+
+Deploy to other static hosting services:
+
+- **Cloudflare Pages** - Fast global CDN
+- **Firebase Hosting** - Google's hosting service
+- **Surge.sh** - Simple static hosting
+- **Render** - Modern hosting platform
+
+## Self-Hosted Deployment
+
+Deploy to your own servers using Docker or traditional hosting.
+
+### Docker Deployment
+
+Create a `Dockerfile`:
+
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm install --production
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Expose port
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
+```
+
+Build and run:
+
+```bash
+# Build Docker image
+docker build -t docs-site .
+
+# Run container
+docker run -p 3000:3000 \
+  -e SESSION_SECRET=your-secret \
+  -e AUTH_USERNAME=admin \
+  -e AUTH_PASSWORD=password \
+  docs-site
+```
+
+### Docker Compose
+
+Create `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+services:
+  docs-site:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - SESSION_SECRET=your-session-secret
+      - AUTH_USERNAME=admin
+      - AUTH_PASSWORD=your-password
+      - NODE_ENV=production
+    restart: unless-stopped
+```
+
+Run with:
+
+```bash
+docker-compose up -d
+```
+
+## Environment Variables for Production
+
+Ensure these environment variables are set in your production environment:
+
+### Required Variables
+
+```bash
+# Session encryption (required)
+SESSION_SECRET=your-generated-secret-key
+
+# Authentication (choose one approach)
+# Single user
+AUTH_USERNAME=admin
+AUTH_PASSWORD=secure-password
+
+# Multiple users (simple)
+AUTH_USERS=user1:pass1,user2:pass2
+
+# Multiple users (advanced)
+AUTH_USERS_JSON={"admin":{"password":"pass","roles":["admin"]}}
+```
+
+### Optional Variables
+
+```bash
+# Session duration (default: 7 days)
+SESSION_DURATION=604800
+
+# Skip authentication in development
+SKIP_AUTH=false
+
+# Node environment
+NODE_ENV=production
+```
+
+## Performance Optimization
+
+### Build Optimization
+
+Optimize your build for production:
+
+```javascript
+// next.config.mjs
+export default {
+  // Enable compression
+  compress: true,
+  
+  // Optimize images
+  images: {
+    unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
+  },
+  
+  // Enable static optimization
+  output: 'export',
+  trailingSlash: true,
+  
+  // Optimize bundles
+  experimental: {
+    optimizePackageImports: true,
+  },
+}
+```
+
+### CDN Configuration
+
+Configure CDN for better performance:
+
+```javascript
+// next.config.mjs
+export default {
+  // CDN asset prefix
+  assetPrefix: process.env.CDN_URL || '',
+  
+  // Enable static optimization
+  generateStaticParams: true,
+  
+  // Optimize images for CDN
+  images: {
+    domains: ['your-cdn-domain.com'],
+  },
+}
+```
+
+## Monitoring and Analytics
+
+### Error Monitoring
+
+Set up error monitoring:
+
+```javascript
+// Add to your layout or pages
+import { useEffect } from 'react'
+
+export default function Layout({ children }) {
+  useEffect(() => {
+    // Initialize error tracking
+    if (process.env.NODE_ENV === 'production') {
+      // Sentry, LogRocket, or similar
+      initErrorTracking()
+    }
+  }, [])
+  
+  return <>{children}</>
+}
+```
+
+### Analytics
+
+Add analytics tracking:
+
+```javascript
+// Google Analytics
+export function useAnalytics() {
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      gtag('config', process.env.NEXT_PUBLIC_GA_ID)
+    }
+  }, [])
+}
+```
+
+## Security Considerations
+
+### Production Security Checklist
+
+<Callout type="warning">
+  Always review security settings before deploying to production.
+</Callout>
+
+- [ ] **HTTPS enabled** - Ensure SSL/TLS is configured
+- [ ] **Secure session secret** - Use a strong, unique secret
+- [ ] **Environment variables secured** - Never commit secrets to code
+- [ ] **Strong passwords** - Use complex passwords for all users
+- [ ] **Regular updates** - Keep dependencies updated
+- [ ] **Access logs** - Monitor authentication attempts
+- [ ] **Error handling** - Avoid exposing sensitive information
+- [ ] **CORS configured** - Restrict cross-origin requests if needed
+
+### Security Headers
+
+Configure security headers:
+
+```javascript
+// next.config.mjs
+export default {
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY',
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+        ],
+      },
+    ]
+  },
+}
+```
+
+## Troubleshooting Deployment
+
+### Common Issues
+
+**Build failures:**
+- Check Node.js version compatibility
+- Verify all dependencies are installed
+- Review build logs for specific errors
+
+**Environment variables not working:**
+- Verify variables are set in deployment platform
+- Check variable names match exactly
+- Restart deployment after adding variables
+
+**Authentication not working in production:**
+- Verify HTTPS is enabled
+- Check session secret is set
+- Ensure cookies are not blocked
+
+**Search not working:**
+- Verify search index was built during deployment
+- Check `_pagefind` directory exists in output
+- Test search functionality manually
+
+### Debug Production Issues
+
+Enable debug logging:
+
+```javascript
+// Add to your application
+if (process.env.NODE_ENV === 'production' && process.env.DEBUG) {
+  console.log('Debug mode enabled in production')
+  // Add debug logging
+}
+```
+
+## Deployment Checklist
+
+Before deploying to production:
+
+- [ ] **Test locally** - Verify everything works in development
+- [ ] **Environment variables** - Set all required variables
+- [ ] **Build process** - Test the build process locally
+- [ ] **Security review** - Check security settings
+- [ ] **Performance test** - Verify site performance
+- [ ] **Backup plan** - Have a rollback strategy
+- [ ] **Monitoring setup** - Configure error tracking and analytics
+- [ ] **Documentation** - Document deployment process
+
+## Next Steps
+
+After successful deployment:
+
+1. **Test thoroughly** - Verify all features work in production
+2. **Monitor performance** - Set up monitoring and alerts
+3. **Plan updates** - Establish a process for updates
+4. **Gather feedback** - Collect user feedback for improvements
+5. **Scale as needed** - Monitor usage and scale accordingly
+
+## Need Help?
+
+If you encounter deployment issues:
+
+- **Check platform documentation** for specific guidance
+- **Review build logs** for error details
+- **Test locally first** to isolate issues
+- **Consult troubleshooting** guides for your platform
+- **Reach out for support** via GitHub issues or community forums 

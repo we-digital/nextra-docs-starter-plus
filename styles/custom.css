@@ -1,0 +1,995 @@
+/* ================================
+   NEXTRA v4 DYNAMIC THEMING SYSTEM
+   ================================ */
+
+:root {
+  /* 🎨 DYNAMIC THEME CONTROL via lib/theme-config.ts */
+  /* Primary theme colors are dynamically injected by ThemeStyleInjector component */
+  /* --brand-primary, --brand-primary-light, --brand-primary-dark are auto-calculated */
+  /* ✅ LogoutButton and all components now properly inherit your theme colors */
+  
+  /* Secondary Colors for custom components */
+  --brand-secondary: hsl(200, 80%, 50%);
+  --brand-accent: hsl(280, 75%, 60%);
+  
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Custom Shadow Variables */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Mode Adjustments */
+html[class~="dark"] {
+  /* 🌙 Primary brand colors are dynamically injected with lighter variants for dark mode */
+  /* --brand-primary, --brand-primary-light, --brand-primary-dark are auto-calculated */
+  
+  --success: #34d399;
+  --warning: #fbbf24;
+  --error: #f87171;
+  --info: #60a5fa;
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* ================================
+   ACCENT COLOR HOVER EFFECTS
+   ================================ */
+
+/* Header Navigation Link Hover Effects - Optimized */
+banner navigation a:not([class*="search"]):not([class*="logo"]):hover,
+[data-nextra-navbar] a:not([class*="search"]):not([class*="logo"]):hover,
+.nextra-navbar a:not([class*="search"]):not([class*="logo"]):hover {
+  color: var(--brand-primary) !important;
+  transition: color 0.2s ease;
+}
+
+/* Table of Contents (TOC) hover effects */
+nav[aria-label="table of contents"] a:hover,
+navigation[aria-label="table of contents"] a:hover,
+[role="navigation"][class*="toc"] a:hover,
+.nextra-toc a:hover,
+.nx-toc a:hover,
+aside[class*="toc"] a:hover {
+  color: var(--brand-primary) !important;
+  transition: color 0.2s ease;
+}
+
+/* More specific TOC targeting */
+nav[aria-label="table of contents"] li a:hover,
+navigation[aria-label="table of contents"] li a:hover {
+  color: var(--brand-primary) !important;
+  /* border-left: 2px solid var(--brand-primary); */
+  padding-left: 2px;
+  /* margin-left: 2px; */
+  transition: all 0.2s ease;
+}
+
+/* TOC feedback and edit links hover */
+nav[aria-label="table of contents"] > a:hover {
+  color: var(--brand-primary) !important;
+  transition: color 0.2s ease;
+}
+
+/* Generic approach for TOC navigation */
+[data-nextra-toc] a:hover,
+[class*="nextra-toc"] a:hover,
+[class*="nx-toc"] a:hover {
+  color: var(--brand-primary) !important;
+  transition: color 0.2s ease;
+}
+
+/* Ensure smooth transitions for all hover effects */
+banner navigation a:not([class*="search"]):not([class*="logo"]),
+[data-nextra-navbar] a:not([class*="search"]):not([class*="logo"]),
+.nextra-navbar a:not([class*="search"]):not([class*="logo"]),
+nav[aria-label="table of contents"] a,
+navigation[aria-label="table of contents"] a,
+.nextra-toc a {
+  transition: color 0.2s ease, border-left 0.2s ease, padding-left 0.2s ease, margin-left 0.2s ease;
+}
+
+/* ================================
+   SIDEBAR FOOTER BUTTONS HOVER EFFECTS - MATCHING CARDS PATTERN
+   ================================ */
+
+/* Sidebar footer buttons - Theme Toggle and Collapse Sidebar */
+.nextra-sidebar-footer button,
+[class*="nextra-sidebar-footer"] button,
+aside[class*="sidebar"] [class*="footer"] button,
+aside[class*="sidebar"] [class*="sticky"][class*="bottom"] button {
+  transition: all 0.3s ease !important;
+  border-radius: 8px !important;
+  position: relative !important;
+}
+
+/* Light mode hover effects - using same background as cards */
+.nextra-sidebar-footer button:hover,
+[class*="nextra-sidebar-footer"] button:hover,
+aside[class*="sidebar"] [class*="footer"] button:hover,
+aside[class*="sidebar"] [class*="sticky"][class*="bottom"] button:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border-color: rgba(139, 116, 58, 0.3) !important;
+  /* transform: translateY(-1px) !important; */
+  box-shadow: 0 4px 12px rgba(139, 116, 58, 0.15) !important;
+}
+
+/* Dark mode hover effects - using same background as cards dark mode */
+html[class~="dark"] .nextra-sidebar-footer button:hover,
+html[class~="dark"] [class*="nextra-sidebar-footer"] button:hover,
+html[class~="dark"] aside[class*="sidebar"] [class*="footer"] button:hover,
+html[class~="dark"] aside[class*="sidebar"] [class*="sticky"][class*="bottom"] button:hover {
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+  /* transform: translateY(-1px) !important; */
+  box-shadow: 0 4px 12px rgba(8, 12, 21, 0.25) !important;
+}
+
+/* Enhanced targeting for theme toggle button specifically */
+button[title="Change theme"]:hover,
+button[title*="Change theme"]:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border-color: rgba(139, 116, 58, 0.3) !important;
+  /* transform: translateY(-1px) !important; */
+  box-shadow: 0 4px 12px rgba(139, 116, 58, 0.15) !important;
+}
+
+html[class~="dark"] button[title="Change theme"]:hover,
+html[class~="dark"] button[title*="Change theme"]:hover {
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Enhanced targeting for collapse sidebar button specifically */
+button[title="Collapse sidebar"]:hover,
+button[title*="Collapse sidebar"]:hover,
+button[aria-label*="Collapse"]:hover,
+button[aria-label*="sidebar"]:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border-color: rgba(139, 116, 58, 0.3) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(139, 116, 58, 0.15) !important;
+}
+
+html[class~="dark"] button[title="Collapse sidebar"]:hover,
+html[class~="dark"] button[title*="Collapse sidebar"]:hover,
+html[class~="dark"] button[aria-label*="Collapse"]:hover,
+html[class~="dark"] button[aria-label*="sidebar"]:hover {
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* ================================
+   NEXTRA CARDS STYLING - MATCHING BANNER BACKGROUND
+   ================================ */
+
+/* Cards Container Styling */
+.nextra-cards,
+[data-nextra-cards],
+[data-cards] {
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* Individual Card Background & Hover Effects - Using Same Colors as Banner */
+.nextra-card,
+[data-nextra-card],
+[data-card],
+.nextra-cards a {
+  /* Light mode: same background as banner */
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 0 1.5rem !important;
+  transition: all 0.3s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+  text-decoration: none !important;
+  display: block !important;
+}
+
+/* Card Hover Effects */
+.nextra-card:hover,
+[data-nextra-card]:hover,
+[data-card]:hover,
+.nextra-cards a:hover {
+  /* Slightly more intense version for hover */
+  background: color-mix(in srgb, rgb(254, 252, 232) 60%, rgb(139, 116, 58)) !important;
+  border-color: rgba(139, 116, 58, 0.5) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 
+    0 8px 25px rgba(139, 116, 58, 0.15),
+    0 4px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Card Title Styling */
+.nextra-card h3,
+[data-nextra-card] h3,
+[data-card] h3,
+.nextra-cards a h3 {
+  color: rgb(70, 58, 29) !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+  transition: color 0.2s ease !important;
+}
+
+/* Card Description/Content */
+.nextra-card p,
+[data-nextra-card] p,
+[data-card] p,
+.nextra-cards a p {
+  color: rgb(92, 77, 39) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+}
+
+/* Card Icon Styling */
+.nextra-card-icon,
+[data-nextra-card] .icon,
+[data-card] .icon {
+  color: rgb(70, 58, 29) !important;
+  margin-bottom: 0.75rem !important;
+  font-size: 1.5rem !important;
+}
+
+/* Dark Mode Support - Using Same Colors as Banner Dark Mode */
+html[class~="dark"] .nextra-card,
+html[class~="dark"] [data-nextra-card],
+html[class~="dark"] [data-card],
+html[class~="dark"] .nextra-cards a {
+  /* Dark mode: same background as banner dark mode */
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+html[class~="dark"] .nextra-card:hover,
+html[class~="dark"] [data-nextra-card]:hover,
+html[class~="dark"] [data-card]:hover,
+html[class~="dark"] .nextra-cards a:hover {
+  /* Slightly more intense version for hover in dark mode */
+  background: color-mix(in srgb, rgb(15, 23, 42) 50%, rgb(8, 12, 21)) !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+  box-shadow: 
+    0 8px 25px rgba(8, 12, 21, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+html[class~="dark"] .nextra-card h3,
+html[class~="dark"] [data-nextra-card] h3,
+html[class~="dark"] [data-card] h3,
+html[class~="dark"] .nextra-cards a h3 {
+  color: rgb(203, 213, 225) !important;
+}
+
+html[class~="dark"] .nextra-card p,
+html[class~="dark"] [data-nextra-card] p,
+html[class~="dark"] [data-card] p,
+html[class~="dark"] .nextra-cards a p {
+  color: rgb(148, 163, 184) !important;
+}
+
+html[class~="dark"] .nextra-card-icon,
+html[class~="dark"] [data-nextra-card] .icon,
+html[class~="dark"] [data-card] .icon {
+  color: rgb(203, 213, 225) !important;
+}
+
+/* Accessibility Improvements for Cards */
+.nextra-card:focus-visible,
+[data-nextra-card]:focus-visible,
+[data-card]:focus-visible,
+.nextra-cards a:focus-visible {
+  outline: 2px solid var(--brand-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Enhanced Visual Effects for Cards */
+.nextra-card::before,
+[data-nextra-card]::before,
+[data-card]::before,
+.nextra-cards a::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, 
+    var(--brand-primary) 0%, 
+    var(--brand-primary-light) 100%) !important;
+  opacity: 0 !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.nextra-card:hover::before,
+[data-nextra-card]:hover::before,
+[data-card]:hover::before,
+.nextra-cards a:hover::before {
+  opacity: 1 !important;
+}
+
+/* ================================
+   MOBILE RESPONSIVE ADJUSTMENTS
+   ================================ */
+
+/* Mobile header enhancements - 1023px and less */
+@media (max-width: 1023px) {
+  /* Hide app title text on mobile, keep logo image */
+  .app-title-text,
+  [data-nextra-navbar] .app-title-text,
+  .nextra-navbar .app-title-text,
+  nav .app-title-text,
+  header .app-title-text {
+    display: none !important;
+  }
+  
+  /* Hide "Welcome," text on mobile, keep display name */
+  .welcome-text,
+  [data-nextra-navbar] .welcome-text,
+  .nextra-navbar .welcome-text,
+  nav .welcome-text,
+  header .welcome-text {
+    display: none !important;
+  }
+}
+
+/* ================================
+   COMPONENT THEME EXTENSIONS
+   ================================ */
+
+/* LogoutButton Component Styles */
+.logout-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.username-display {
+  font-size: 14px;
+  color: rgb(100, 116, 139); /* text-slate-500 equivalent */
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.logout-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  background: var(--brand-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+}
+
+.logout-button:hover {
+  background: var(--brand-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.logout-button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Dark mode username display */
+html[class~="dark"] .username-display {
+  color: rgb(203, 213, 225); /* text-slate-300 equivalent */
+}
+
+/* ================================
+   UTILITY CLASSES
+   ================================ */
+
+.brand-primary {
+  color: var(--brand-primary);
+}
+
+.brand-secondary {
+  color: var(--brand-secondary);
+}
+
+.brand-accent {
+  color: var(--brand-accent);
+}
+
+.bg-brand-primary {
+  background-color: var(--brand-primary);
+}
+
+.bg-brand-secondary {
+  background-color: var(--brand-secondary);
+}
+
+.border-brand-primary {
+  border-color: var(--brand-primary);
+}
+
+/* ================================
+   CUSTOM CALLOUT STYLES
+   ================================ */
+
+.nextra-callout {
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 4px solid;
+}
+
+.nextra-callout.info {
+  background-color: color-mix(in srgb, var(--info) 10%, transparent);
+  border-left-color: var(--info);
+}
+
+.nextra-callout.warning {
+  background-color: color-mix(in srgb, var(--warning) 10%, transparent);
+  border-left-color: var(--warning);
+}
+
+.nextra-callout.error {
+  background-color: color-mix(in srgb, var(--error) 10%, transparent);
+  border-left-color: var(--error);
+}
+
+.nextra-callout.success {
+  background-color: color-mix(in srgb, var(--success) 10%, transparent);
+  border-left-color: var(--success);
+}
+
+/* ================================
+   CUSTOM BUTTON STYLES
+   ================================ */
+
+.nextra-button-primary {
+  background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.nextra-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.nextra-button-secondary {
+  background: transparent;
+  color: var(--brand-secondary);
+  border: 2px solid var(--brand-secondary);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nextra-button-secondary:hover {
+  background: var(--brand-secondary);
+  color: white;
+}
+
+/* ================================
+   FOOTER STYLING - USING THEME BACKGROUND COLORS (DARKER)
+   ================================ */
+
+/* Target the footer wrapper div (with bg-gray-100 class) */
+div[class*="bg-gray-100"],
+div[class*="x:bg-gray-100"] {
+  /* Using theme light background (warm cream) but darker */
+  background: color-mix(in srgb, rgb(254, 252, 232) 85%, black) !important;
+}
+
+/* Dark mode wrapper */
+html[class~="dark"] div[class*="bg-gray-100"],
+html[class~="dark"] div[class*="x:bg-gray-100"],
+div[class*="dark:bg-neutral-900"],
+div[class*="x:dark:bg-neutral-900"] {
+  /* Using theme dark background (dark slate) but darker */
+  background: color-mix(in srgb, rgb(15, 23, 42) 85%, black) !important;
+}
+
+/* Override the HR border */
+hr.nextra-border {
+  border-color: color-mix(in srgb, var(--brand-primary) 20%, transparent) !important;
+  opacity: 0.3 !important;
+}
+
+/* Style the actual footer element */
+footer[class*="mx-auto"],
+footer[class*="flex"],
+footer[class*="max-w"],
+footer[class*="justify-center"],
+footer[class*="py-12"] {
+  background: transparent !important;
+}
+
+/* Footer text styling */
+footer small,
+footer[class*="text-gray-600"] small,
+footer[class*="dark:text-gray-400"] small {
+  color: color-mix(in srgb, currentColor 75%, var(--brand-primary)) !important;
+  opacity: 0.8 !important;
+}
+
+/* Footer links styling */
+footer a,
+footer small a {
+  color: var(--brand-primary) !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+footer a:hover,
+footer small a:hover {
+  color: var(--brand-primary-light) !important;
+}
+
+/* Dark mode footer text adjustments */
+html[class~="dark"] footer small,
+html[class~="dark"] footer[class*="text-gray-600"] small,
+html[class~="dark"] footer[class*="dark:text-gray-400"] small {
+  color: color-mix(in srgb, currentColor 80%, var(--brand-primary-light)) !important;
+  opacity: 0.85 !important;
+}
+
+html[class~="dark"] footer a:hover,
+html[class~="dark"] footer small a:hover {
+  color: var(--brand-primary-light) !important;
+}
+
+/* Ensure all utility classes are overridden - flat colors only */
+[class*="bg-gray-100"] {
+  background: color-mix(in srgb, var(--brand-primary) 15%, #2a2a2a) !important;
+}
+
+html[class~="dark"] [class*="bg-neutral-900"] {
+  background: color-mix(in srgb, var(--brand-primary) 10%, #1a1a1a) !important;
+}
+
+[class*="text-gray-600"] {
+  color: color-mix(in srgb, currentColor 75%, var(--brand-primary)) !important;
+}
+
+html[class~="dark"] [class*="text-gray-400"] {
+  color: color-mix(in srgb, currentColor 80%, var(--brand-primary-light)) !important;
+}
+
+/* ================================
+   SIDEBAR CUSTOMIZATION - AGGRESSIVE OVERRIDE
+   ================================ */
+
+/* Force remove all hover backgrounds from sidebar items (except active) */
+
+/* Target all sidebar links and buttons - be very aggressive */
+aside.nextra-sidebar a:not([class*="bg-primary"]):not(.active),
+aside.nextra-sidebar button:not([class*="bg-primary"]):not(.active),
+.nextra-sidebar a:not([class*="bg-primary"]):not(.active),
+.nextra-sidebar button:not([class*="bg-primary"]):not(.active) {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+aside.nextra-sidebar a:not([class*="bg-primary"]):not(.active):hover,
+aside.nextra-sidebar button:not([class*="bg-primary"]):not(.active):hover,
+.nextra-sidebar a:not([class*="bg-primary"]):not(.active):hover,
+.nextra-sidebar button:not([class*="bg-primary"]):not(.active):hover {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Target specific class patterns that Nextra 4 uses */
+aside [class*="hover:bg-gray-100"]:not([class*="bg-primary"]):not(.active),
+aside [class*="x:hover:bg-gray-100"]:not([class*="bg-primary"]):not(.active) {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+aside [class*="hover:bg-gray-100"]:not([class*="bg-primary"]):not(.active):hover,
+aside [class*="x:hover:bg-gray-100"]:not([class*="bg-primary"]):not(.active):hover {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Dark mode specific overrides */
+aside [class*="dark:hover:bg-primary-100"]:not([class*="bg-primary"]):not(.active),
+aside [class*="x:dark:hover:bg-primary-100"]:not([class*="bg-primary"]):not(.active) {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+aside [class*="dark:hover:bg-primary-100"]:not([class*="bg-primary"]):not(.active):hover,
+aside [class*="x:dark:hover:bg-primary-100"]:not([class*="bg-primary"]):not(.active):hover {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Override any gray background utilities */
+aside [class*="bg-gray-"]:not([class*="bg-primary"]):not(.active),
+aside [class*="x:bg-gray-"]:not([class*="bg-primary"]):not(.active) {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* Very specific targeting for list items in sidebar */
+aside.nextra-sidebar li:not(.active) > a,
+aside.nextra-sidebar li:not(.active) > button {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+aside.nextra-sidebar li:not(.active) > a:hover,
+aside.nextra-sidebar li:not(.active) > button:hover {
+  background-color: transparent !important;
+  background: transparent !important;
+}
+
+/* ================================
+   NEXTRA CODE BLOCK STYLING
+   ================================ */
+
+/* Code block background and border-radius styling */
+pre[class*="x:bg-white"],
+pre[class*="bg-white"] {
+  /* Using theme light background (warm cream) but darker */
+  background: color-mix(in srgb, rgb(254, 252, 232) 85%, black) !important;
+  border-radius: 14px !important;
+}
+
+/* Dark mode code blocks */
+html[class~="dark"] pre[class*="x:dark:bg-black"],
+html[class~="dark"] pre[class*="dark:bg-black"] {
+  /* Using theme dark background (dark slate) but darker */
+  background: color-mix(in srgb, rgb(15, 23, 42) 85%, black) !important;
+  border-radius: 14px !important;
+}
+
+/* Additional targeting for Nextra v4 code blocks */
+.nextra-content pre,
+div[class*="nextra"] pre,
+article pre {
+  border-radius: 14px !important;
+}
+
+/* Light mode - fallback targeting */
+pre[class*="text-"]:not([class*="dark:"]) {
+  background: color-mix(in srgb, rgb(254, 252, 232) 85%, black) !important;
+  border-radius: 14px !important;
+}
+
+/* Dark mode - fallback targeting */
+html[class~="dark"] pre[class*="text-"] {
+  background: color-mix(in srgb, rgb(15, 23, 42) 85%, black) !important;
+  border-radius: 14px !important;
+}
+
+/* Override any inline styles that might conflict */
+pre[style*="border-radius"] {
+  border-radius: 14px !important;
+}
+
+/* ================================
+   NEXTRA TABLE STYLING - MATCHING BANNER/CARDS BACKGROUND PATTERN
+   ================================ */
+
+/* Table Container - Both GFM and Component Tables */
+.nextra-content table,
+table[class*="nextra-table"],
+[data-nextra-table],
+.nextra-table {
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  background: transparent;
+}
+
+/* Table Headers - Using Same Background as Banner/Cards */
+.nextra-content th,
+table[class*="nextra-table"] th,
+[data-nextra-table] th,
+.nextra-table th,
+.nextra-content thead td,
+table[class*="nextra-table"] thead td {
+  /* Light mode: same background as banner/cards */
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(70, 58, 29) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  padding: 1rem 0.75rem;
+  font-weight: 600;
+  text-align: left;
+  font-size: 0.9rem;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+/* Table Data Cells - Subtle Background */
+.nextra-content td,
+table[class*="nextra-table"] td,
+[data-nextra-table] td,
+.nextra-table td {
+  /* Light mode: very subtle version of background */
+  background: color-mix(in srgb, rgb(254, 252, 232) 20%, transparent) !important;
+  color: rgb(92, 77, 39) !important;
+  border: 1px solid rgba(139, 116, 58, 0.2) !important;
+  padding: 0.875rem 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Table Row Hover Effects */
+.nextra-content tbody tr:hover,
+table[class*="nextra-table"] tbody tr:hover,
+[data-nextra-table] tbody tr:hover,
+.nextra-table tbody tr:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 40%, transparent) !important;
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+
+.nextra-content tbody tr:hover td,
+table[class*="nextra-table"] tbody tr:hover td,
+[data-nextra-table] tbody tr:hover td,
+.nextra-table tbody tr:hover td {
+  background: color-mix(in srgb, rgb(254, 252, 232) 45%, rgb(139, 116, 58)) !important;
+  border-color: rgba(139, 116, 58, 0.4) !important;
+}
+
+/* Dark Mode Table Styling */
+html[class~="dark"] .nextra-content th,
+html[class~="dark"] table[class*="nextra-table"] th,
+html[class~="dark"] [data-nextra-table] th,
+html[class~="dark"] .nextra-table th,
+html[class~="dark"] .nextra-content thead td,
+html[class~="dark"] table[class*="nextra-table"] thead td {
+  /* Dark mode: same background as banner/cards dark mode */
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(203, 213, 225) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+html[class~="dark"] .nextra-content td,
+html[class~="dark"] table[class*="nextra-table"] td,
+html[class~="dark"] [data-nextra-table] td,
+html[class~="dark"] .nextra-table td {
+  /* Dark mode: very subtle version of background */
+  background: color-mix(in srgb, rgb(15, 23, 42) 20%, transparent) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.2) !important;
+}
+
+/* Dark Mode Row Hover Effects */
+html[class~="dark"] .nextra-content tbody tr:hover,
+html[class~="dark"] table[class*="nextra-table"] tbody tr:hover,
+html[class~="dark"] [data-nextra-table] tbody tr:hover,
+html[class~="dark"] .nextra-table tbody tr:hover {
+  background: color-mix(in srgb, rgb(15, 23, 42) 40%, transparent) !important;
+}
+
+html[class~="dark"] .nextra-content tbody tr:hover td,
+html[class~="dark"] table[class*="nextra-table"] tbody tr:hover td,
+html[class~="dark"] [data-nextra-table] tbody tr:hover td,
+html[class~="dark"] .nextra-table tbody tr:hover td {
+  background: color-mix(in srgb, rgb(15, 23, 42) 45%, rgb(8, 12, 21)) !important;
+  border-color: rgba(71, 85, 105, 0.4) !important;
+}
+
+/* Table Component Specific Styling (nextra/components Table) */
+.nextra-table-container,
+[data-nextra-table-container] {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+/* Nextra Table Component Headers */
+.nextra-table-th,
+[data-nextra-table-th] {
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(70, 58, 29) !important;
+  border-color: rgba(139, 116, 58, 0.3) !important;
+}
+
+html[class~="dark"] .nextra-table-th,
+html[class~="dark"] [data-nextra-table-th] {
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(203, 213, 225) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Nextra Table Component Cells */
+.nextra-table-td,
+[data-nextra-table-td] {
+  background: color-mix(in srgb, rgb(254, 252, 232) 20%, transparent) !important;
+  color: rgb(92, 77, 39) !important;
+  border-color: rgba(139, 116, 58, 0.2) !important;
+}
+
+html[class~="dark"] .nextra-table-td,
+html[class~="dark"] [data-nextra-table-td] {
+  background: color-mix(in srgb, rgb(15, 23, 42) 20%, transparent) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.2) !important;
+}
+
+/* ================================
+   ENHANCED NEXTRA COMPONENTS (OTHER)
+   ================================ */
+
+/* Enhanced code blocks */
+.nextra-content pre {
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Tab panel improvements */
+div[role="tabpanel"] {
+  margin-top: 0;
+}
+
+/* ================================
+   ACCESSIBILITY IMPROVEMENTS
+   ================================ */
+
+/* Focus indicators */
+.nextra-button-primary:focus,
+.nextra-button-secondary:focus,
+.logout-button:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .logout-button {
+    border: 2px solid white;
+  }
+  
+  .nextra-callout {
+    border: 2px solid;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ================================
+   NEXTRA BANNER COMPONENT STYLING
+   ================================ */
+
+/* Banner background using darker theme background colors */
+[data-nextra-banner],
+.nextra-banner {
+  /* Light mode: darker version of warm cream background */
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border: none !important;
+  font-weight: 500 !important;
+}
+
+/* Banner text styling */
+[data-nextra-banner] *,
+.nextra-banner * {
+  color: rgb(92, 77, 39) !important;
+}
+
+/* Banner links styling */
+[data-nextra-banner] a,
+.nextra-banner a {
+  color: rgb(70, 58, 29) !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+}
+
+/* Banner links hover effect */
+[data-nextra-banner] a:hover,
+.nextra-banner a:hover {
+  color: rgb(50, 42, 21) !important;
+  text-decoration: none !important;
+}
+
+/* Banner dismiss button styling */
+[data-nextra-banner] button,
+.nextra-banner button {
+  /* color: rgb(92, 77, 39) !important; */
+  /* background: rgba(139, 116, 58, 0.15) !important; */
+  /* border: 1px solid rgba(139, 116, 58, 0.25) !important; */
+  /* border-radius: 4px !important; */
+  /* padding: 4px 8px !important; */
+  transition: all 0.2s ease !important;
+}
+
+[data-nextra-banner] button:hover,
+.nextra-banner button:hover {
+  background: rgba(139, 116, 58, 0.25) !important;
+  border-color: rgba(139, 116, 58, 0.4) !important;
+}
+
+/* Dark mode adjustments - using darker version of dark slate background */
+html[class~="dark"] [data-nextra-banner],
+html[class~="dark"] .nextra-banner {
+  /* Dark mode: darker version of dark slate background */
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(148, 163, 184) !important;
+}
+
+/* Dark mode text styling */
+html[class~="dark"] [data-nextra-banner] *,
+html[class~="dark"] .nextra-banner * {
+  color: rgb(148, 163, 184) !important;
+}
+
+/* Dark mode links styling */
+html[class~="dark"] [data-nextra-banner] a,
+html[class~="dark"] .nextra-banner a {
+  color: rgb(203, 213, 225) !important;
+  text-decoration: underline !important;
+  font-weight: 600 !important;
+}
+
+/* Dark mode links hover effect */
+html[class~="dark"] [data-nextra-banner] a:hover,
+html[class~="dark"] .nextra-banner a:hover {
+  color: rgb(241, 245, 249) !important;
+  text-decoration: none !important;
+}
+
+/* Dark mode dismiss button styling */
+html[class~="dark"] [data-nextra-banner] button,
+html[class~="dark"] .nextra-banner button {
+  /* color: rgb(148, 163, 184) !important;
+  background: rgba(71, 85, 105, 0.15) !important;
+  border: 1px solid rgba(71, 85, 105, 0.25) !important; */
+}
+
+html[class~="dark"] [data-nextra-banner] button:hover,
+html[class~="dark"] .nextra-banner button:hover {
+  background: transparent !important;
+}
+
+
+/* ================================
+   CUSTOM STYLES
+   ================================ */
+   .app-logo {
+    border-radius: 8px;
+  }
+   .primary-highlighted-text{
+    color: var(--brand-primary);
+   }
+
+  /* Add your styles here... */

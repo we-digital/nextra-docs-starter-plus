@@ -1,0 +1,650 @@
+import { Steps, Callout, Cards, Tabs, Table } from 'nextra/components'
+
+# Creating Content
+
+Learn how to add new pages, organize your documentation, and leverage Nextra's powerful features.
+
+## Adding New Pages
+
+### Creating MDX Files
+
+Create new documentation pages by adding MDX files to the `content/` directory:
+
+```mdx
+# My New Page
+
+This is a new documentation page with **markdown** support.
+
+## Features
+
+- Full markdown support
+- React components
+- Syntax highlighting
+- And much more!
+```
+
+### File Naming
+
+Use descriptive, URL-friendly names:
+
+- `getting-started.mdx` → `/getting-started`
+- `api-reference.mdx` → `/api-reference`
+- `user-guide.mdx` → `/user-guide`
+
+### Directory Organization
+
+Organize content with subdirectories:
+
+```
+content/
+├── index.mdx
+├── quick-start.mdx
+├── guides/
+│   ├── _meta.json
+│   ├── installation.mdx
+│   └── configuration.mdx
+└── api/
+    ├── _meta.json
+    ├── authentication.mdx
+    └── endpoints.mdx
+```
+
+## Navigation Configuration
+
+### Main Navigation
+
+Update `content/_meta.js` to add pages to navigation:
+
+```javascript
+export default {
+  index: "Getting Started",
+  "quick-start": "Quick Start",
+  "guides": "User Guides",
+  "api": "API Reference",
+  "troubleshooting": "Troubleshooting"
+}
+```
+
+### Nested Navigation
+
+For subdirectories, create `_meta.json` files:
+
+```json
+{
+  "installation": "Installation Guide",
+  "configuration": "Configuration",
+  "advanced": "Advanced Topics"
+}
+```
+
+### Advanced Navigation
+
+Create complex navigation structures:
+
+```javascript
+export default {
+  index: "Home",
+  "getting-started": "Getting Started",
+  "guides": {
+    "title": "User Guides",
+    "type": "menu",
+    "items": {
+      "installation": "Installation",
+      "configuration": "Configuration",
+      "advanced": "Advanced Topics"
+    }
+  },
+  "api": {
+    "title": "API Reference",
+    "type": "menu",
+    "collapsed": true,
+    "items": {
+      "authentication": "Authentication",
+      "endpoints": "Endpoints",
+      "examples": "Examples"
+    }
+  }
+}
+```
+
+## Using Nextra Components
+
+### Callouts
+
+Highlight important information:
+
+<Callout type="info">
+  This is an info callout with helpful information.
+</Callout>
+
+<Callout type="warning">
+  This is a warning callout for important notices.
+</Callout>
+
+<Callout type="error">
+  This is an error callout for critical information.
+</Callout>
+
+```mdx
+import { Callout } from 'nextra/components'
+
+<Callout type="info">
+  This is an info callout with helpful information.
+</Callout>
+
+<Callout type="warning">
+  This is a warning callout for important notices.
+</Callout>
+
+<Callout type="error">
+  This is an error callout for critical information.
+</Callout>
+```
+
+### Steps
+
+Create step-by-step guides:
+
+<Steps>
+### Step 1: Clone the Repository
+
+First, clone the template repository to your local machine.
+
+### Step 2: Install Dependencies
+
+Install the required packages using your preferred package manager.
+
+### Step 3: Configure Environment
+
+Set up your environment variables and configuration files.
+
+### Step 4: Start Development
+
+Launch the development server and begin customizing.
+</Steps>
+
+```mdx
+import { Steps } from 'nextra/components'
+
+<Steps>
+### Step 1: Clone the Repository
+
+First, clone the template repository to your local machine.
+
+### Step 2: Install Dependencies
+
+Install the required packages using your preferred package manager.
+</Steps>
+```
+
+### Cards
+
+Create attractive navigation cards:
+
+<Cards>
+  <Cards.Card title="Quick Start" href="/quick-start" />
+  <Cards.Card title="Authentication" href="/authentication-setup" />
+  <Cards.Card title="Deployment" href="/deployment" />
+  <Cards.Card title="Customization" href="/customization" />
+</Cards>
+
+```mdx
+import { Cards } from 'nextra/components'
+
+<Cards>
+  <Cards.Card title="Quick Start" href="/quick-start" />
+  <Cards.Card title="Authentication" href="/authentication-setup" />
+  <Cards.Card title="Deployment" href="/deployment" />
+</Cards>
+```
+
+### Tabs
+
+Organize content with tabs:
+
+<Tabs items={['npm', 'yarn', 'pnpm']}>
+  <Tabs.Tab>
+    ```bash
+    npm install
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn install
+    yarn dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    pnpm install
+    pnpm dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+````mdx
+import { Tabs } from 'nextra/components'
+
+<Tabs items={['npm', 'yarn', 'pnpm']}>
+  <Tabs.Tab>
+    ```bash
+    npm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn install
+    ```
+  </Tabs.Tab>
+</Tabs>
+````
+
+## Markdown Features
+
+### Code Blocks
+
+Syntax-highlighted code blocks:
+
+```javascript
+// JavaScript example
+function greet(name) {
+  return `Hello, ${name}!`
+}
+```
+
+```typescript
+// TypeScript example
+interface User {
+  name: string
+  email: string
+}
+
+function createUser(user: User): User {
+  return user
+}
+```
+
+### Tables
+
+Nextra supports multiple ways to create tables in your documentation.
+
+#### Markdown Tables (GFM Syntax)
+
+Create structured data tables using GitHub Flavored Markdown syntax:
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Authentication | User login system | ✅ Complete |
+| Search | Full-text search | ✅ Complete |
+| Themes | Dark/light mode | ✅ Complete |
+| Comments | User comments | 🔄 Planned |
+
+```markdown
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Authentication | User login system | ✅ Complete |
+| Search | Full-text search | ✅ Complete |
+| Themes | Dark/light mode | ✅ Complete |
+| Comments | User comments | 🔄 Planned |
+```
+
+#### Table Alignment
+
+Control column alignment with colons in the header separator:
+
+| Left Aligned | Center Aligned | Right Aligned |
+|:-------------|:--------------:|--------------:|
+| Left content | Center content | Right content |
+| More data    | More data      | More data     |
+
+```markdown
+| Left Aligned | Center Aligned | Right Aligned |
+|:-------------|:--------------:|--------------:|
+| Left content | Center content | Right content |
+| More data    | More data      | More data     |
+```
+
+#### Nextra Table Component
+
+For more control over styling and complex tables, use the built-in `Table` component:
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>API Endpoint</Table.Th>
+      <Table.Th>Method</Table.Th>
+      <Table.Th>Description</Table.Th>
+      <Table.Th>Status</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>/api/auth/login</Table.Td>
+      <Table.Td>POST</Table.Td>
+      <Table.Td>User authentication endpoint</Table.Td>
+      <Table.Td>✅ Active</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>/api/search</Table.Td>
+      <Table.Td>GET</Table.Td>
+      <Table.Td>Full-text search functionality</Table.Td>
+      <Table.Td>✅ Active</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>/api/users</Table.Td>
+      <Table.Td>GET</Table.Td>
+      <Table.Td>User management endpoint</Table.Td>
+      <Table.Td>🔄 Development</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+
+```mdx
+import { Table } from 'nextra/components'
+
+<Table>
+  <thead>
+    <Table.Tr>
+      <Table.Th>API Endpoint</Table.Th>
+      <Table.Th>Method</Table.Th>
+      <Table.Th>Description</Table.Th>
+      <Table.Th>Status</Table.Th>
+    </Table.Tr>
+  </thead>
+  <tbody>
+    <Table.Tr>
+      <Table.Td>/api/auth/login</Table.Td>
+      <Table.Td>POST</Table.Td>
+      <Table.Td>User authentication endpoint</Table.Td>
+      <Table.Td>✅ Active</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>/api/search</Table.Td>
+      <Table.Td>GET</Table.Td>
+      <Table.Td>Full-text search functionality</Table.Td>
+      <Table.Td>✅ Active</Table.Td>
+    </Table.Tr>
+    <Table.Tr>
+      <Table.Td>/api/users</Table.Td>
+      <Table.Td>GET</Table.Td>
+      <Table.Td>User management endpoint</Table.Td>
+      <Table.Td>🔄 Development</Table.Td>
+    </Table.Tr>
+  </tbody>
+</Table>
+```
+
+#### When to Use Each Approach
+
+**Use Markdown Tables when:**
+- Creating simple, straightforward tables
+- Content is primarily text-based
+- You want to keep the source readable
+- Quick documentation needs
+
+**Use Table Component when:**
+- You need more styling control
+- Tables contain complex content or components
+- You want consistent styling across your site
+- Building data-heavy documentation
+
+#### Advanced Table Features
+
+The Table component supports all standard HTML table attributes and can be styled with CSS:
+
+```css
+/* Custom table styling in styles/custom.css */
+.nextra-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.nextra-table th {
+  background-color: var(--nextra-bg-secondary);
+  font-weight: 600;
+  padding: 12px;
+  text-align: left;
+}
+
+.nextra-table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--nextra-border);
+}
+
+.nextra-table tr:hover {
+  background-color: var(--nextra-bg-hover);
+}
+```
+
+### Lists
+
+Organize information with lists:
+
+**Unordered lists:**
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+- Third item
+
+**Ordered lists:**
+1. First step
+2. Second step
+3. Third step
+
+**Task lists:**
+- [x] Completed task
+- [ ] Pending task
+- [ ] Another pending task
+
+### Links and References
+
+Link to other pages and external resources:
+
+- Internal link: [Quick Start](/quick-start)
+- External link: [Nextra Documentation](https://nextra.site)
+- Anchor link: [Navigation Configuration](#navigation-configuration)
+
+## Advanced Features
+
+### Custom Components
+
+Create and use custom React components:
+
+```jsx
+// components/CustomButton.jsx
+export function CustomButton({ children, onClick }) {
+  return (
+    <button 
+      className="custom-button"
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
+}
+
+```
+Use in MDX:
+
+```mdx
+import { CustomButton } from '../components/CustomButton.jsx'
+
+<CustomButton onClick={() => alert('Clicked!')}>
+  Click me!
+</CustomButton>
+```
+
+### Frontmatter
+
+Add metadata to your pages:
+
+```mdx
+---
+title: "Custom Page Title"
+description: "Page description for SEO"
+date: "2024-01-15"
+author: "Your Name"
+tags: ["guide", "tutorial"]
+---
+
+# Page Content
+
+Your page content goes here.
+```
+
+### Images and Media
+
+Add images and media files to your documentation. All images should be placed in the `/public` directory of your project.
+
+<Callout type="info">
+  **Image Root Directory**: The `/public` folder is the root directory for serving static files. When you reference `/images/logo.png` in your MDX, it actually points to `/public/images/logo.png` in your project structure.
+</Callout>
+
+**Basic image syntax:**
+
+```mdx
+![Alt text](/images/screenshot.png)
+
+<img src="/images/logo.png" alt="Logo" width="200" />
+```
+
+**Project structure example:**
+
+```
+project/
+├── public/
+│   └── images/
+│       ├── logo.png
+│       ├── screenshot.png
+│       └── diagram.svg
+└── content/
+    └── your-page.mdx
+```
+
+**Using images in your content:**
+
+```mdx
+# Documentation with images
+
+Here's our brand logo:
+
+![Brand Logo](/images/brand-logo.png)
+
+You can also use HTML img tags for more control:
+
+<img 
+  src="/images/architecture-scheme.png" 
+  alt="System Architecture Diagram" 
+  width="600" 
+  style={{borderRadius: '8px', border: '1px solid #e5e7eb'}}
+/>
+```
+
+## Content Best Practices
+
+### Writing Guidelines
+
+1. **Clear headings** - Use descriptive, hierarchical headings
+2. **Concise paragraphs** - Keep paragraphs short and focused
+3. **Active voice** - Use active voice for clarity
+4. **Consistent terminology** - Use consistent terms throughout
+5. **Code examples** - Include practical code examples
+
+### Structure Guidelines
+
+1. **Logical flow** - Organize content in logical progression
+2. **Cross-references** - Link related content
+3. **Table of contents** - Use headings for automatic TOC
+4. **Scannable format** - Use lists, tables, and callouts
+
+### SEO Optimization
+
+1. **Descriptive titles** - Use clear, descriptive page titles
+2. **Meta descriptions** - Add page descriptions
+3. **Heading hierarchy** - Use proper heading structure (H1, H2, H3)
+4. **Internal linking** - Link between related pages
+
+## Content Organization Strategies
+
+### By Feature
+
+Organize documentation by product features:
+
+```
+content/
+├── authentication/
+├── user-management/
+├── reporting/
+└── integrations/
+```
+
+### By User Journey
+
+Organize by how users progress:
+
+```
+content/
+├── getting-started/
+├── basic-usage/
+├── advanced-features/
+└── troubleshooting/
+```
+
+### By Content Type
+
+Organize by content type:
+
+```
+content/
+├── tutorials/
+├── how-to-guides/
+├── explanations/
+└── reference/
+```
+
+## Testing Your Content
+
+### Local Preview
+
+Always preview your content locally:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Content Checklist
+
+Before publishing, verify:
+
+- [ ] All links work correctly
+- [ ] Images load properly
+- [ ] Code examples are accurate
+- [ ] Navigation is updated
+- [ ] Spelling and grammar are correct
+- [ ] Content follows style guidelines
+
+## Next Steps
+
+Now that you know how to create content:
+
+1. **Plan your content structure** - Organize your documentation logically
+2. **Create your first pages** - Start with essential documentation
+3. **Customize the design** - Learn about [Customization](/customization/styling)
+4. **Prepare for deployment** - Review [Deployment](/installation/deployment) options 

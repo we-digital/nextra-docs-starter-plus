@@ -1,0 +1,659 @@
+import { Tabs, Callout } from 'nextra/components'
+
+# Troubleshooting
+
+Common issues and solutions for nextra-docs-starter-plus. Find quick fixes for the most frequently encountered problems.
+
+## Common Issues
+
+### Authentication Not Working
+
+**Symptoms:**
+- Login page doesn't appear
+- Login attempts fail with valid credentials
+- Redirects not working properly
+
+**Solutions:**
+
+#### Check Environment Variables
+
+Verify all required environment variables are set:
+
+<Tabs items={['Single User', 'Multiple Users', 'JSON Users']}>
+  <Tabs.Tab>
+    ```bash
+    # Required for single user setup
+    SESSION_SECRET=your-generated-secret-key
+    AUTH_USERNAME=your-username
+    AUTH_PASSWORD=your-password
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Required for multiple users
+    SESSION_SECRET=your-generated-secret-key
+    AUTH_USERS=user1:pass1,user2:pass2
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Required for JSON users
+    SESSION_SECRET=your-generated-secret-key
+    AUTH_USERS_JSON={"admin":{"password":"pass","roles":["admin"]}}
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Verify Session Secret
+
+Generate a new session secret if needed:
+
+```bash
+# Generate a new session secret
+openssl rand -base64 32
+```
+
+#### Check Middleware Configuration
+
+Ensure `middleware.ts` is properly configured:
+
+```typescript
+// middleware.ts
+export const config = {
+  matcher: [
+    '/protected/(.*)',
+    // Add your protected routes here
+  ],
+}
+```
+
+#### Restart Development Server
+
+After changing environment variables:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    # Stop the server (Ctrl+C) then restart
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Stop the server (Ctrl+C) then restart
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Stop the server (Ctrl+C) then restart
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Search Not Working
+
+**Symptoms:**
+- Search results not appearing
+- Search index not found
+- Search functionality missing
+
+**Solutions:**
+
+#### Rebuild Search Index
+
+Run the build command to generate search index:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm build
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run build
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn build
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Check Pagefind Files
+
+Verify that Pagefind files are generated:
+
+```bash
+# Check if search index exists
+ls -la public/_pagefind/
+
+# Should contain files like:
+# pagefind.js
+# pagefind-entry.json
+# Various .pf files
+```
+
+#### Clear Build Cache
+
+Clear Next.js cache and rebuild:
+
+```bash
+# Remove build artifacts
+rm -rf .next
+rm -rf out
+rm -rf public/_pagefind
+
+# Rebuild
+npm run build
+```
+
+#### Check Content Exclusion
+
+Ensure content isn't excluded from search:
+
+```mdx
+<!-- Make sure content doesn't have data-pagefind-ignore -->
+# This content will be searchable
+
+<div data-pagefind-ignore>
+  This content will be excluded from search
+</div>
+```
+
+### Styling Issues
+
+**Symptoms:**
+- Styles not loading
+- Layout broken
+- Custom styles not applying
+
+**Solutions:**
+
+#### Clear Browser Cache
+
+Clear browser cache to reload styles:
+
+```bash
+# Or use hard refresh
+# Ctrl+F5 (Windows/Linux)
+# Cmd+Shift+R (Mac)
+```
+
+#### Check CSS Files
+
+Verify CSS files are properly imported:
+
+```javascript
+// app/layout.jsx
+import '../styles/custom.css'
+import '../styles/login.css'
+```
+
+#### Verify No Conflicting Styles
+
+Check for conflicting CSS rules:
+
+```css
+/* Check for !important overrides */
+.my-class {
+  color: red !important; /* This might override other styles */
+}
+
+/* Use specific selectors instead */
+.nextra-container .my-class {
+  color: red;
+}
+```
+
+#### Restart Development Server
+
+Restart the server to reload CSS:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Build Failures
+
+**Symptoms:**
+- Build process fails
+- TypeScript errors
+- Missing dependencies
+
+**Solutions:**
+
+#### Install Dependencies
+
+Ensure all dependencies are installed:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    # Clean install
+    rm -rf node_modules pnpm-lock.yaml
+    pnpm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Clean install
+    rm -rf node_modules package-lock.json
+    npm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    # Clean install
+    rm -rf node_modules yarn.lock
+    yarn install
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+#### Check Node.js Version
+
+Verify Node.js version compatibility:
+
+```bash
+# Check current version
+node --version
+
+# Should be 18.x or higher
+# Update Node.js if needed
+```
+
+#### Fix TypeScript Errors
+
+Common TypeScript fixes:
+
+```typescript
+// Fix: Property does not exist on type
+// Add proper type definitions
+interface User {
+  username: string
+  password: string
+  displayName?: string
+}
+
+// Fix: Cannot find module
+// Check import paths
+import { Component } from '../components/Component'
+// vs
+import { Component } from './components/Component'
+```
+
+#### Check Build Logs
+
+Review build logs for specific errors:
+
+```bash
+# Run build with verbose output
+npm run build --verbose
+
+# Check for specific error messages
+# and address them individually
+```
+
+### Navigation Issues
+
+**Symptoms:**
+- Navigation not updating
+- Pages not appearing in menu
+- Wrong page order
+
+**Solutions:**
+
+#### Update _meta.js Files
+
+Check navigation configuration:
+
+```javascript
+// content/_meta.js
+export default {
+  index: "Home",
+  "getting-started": "Getting Started",
+  "troubleshooting": "Troubleshooting",
+  // Add your pages here
+}
+```
+
+#### File Naming
+
+Ensure file names match navigation keys:
+
+```
+content/
+├── index.mdx           # matches "index"
+├── getting-started.mdx # matches "getting-started"
+└── troubleshooting.mdx # matches "troubleshooting"
+```
+
+#### Restart Development Server
+
+Navigation changes require server restart:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Performance Issues
+
+**Symptoms:**
+- Slow page loads
+- Large bundle sizes
+- Poor search performance
+
+**Solutions:**
+
+#### Optimize Images
+
+Use Next.js Image component:
+
+```jsx
+import Image from 'next/image'
+
+// Instead of
+<img src="/large-image.jpg" alt="Image" />
+
+// Use
+<Image
+  src="/large-image.jpg"
+  alt="Image"
+  width={800}
+  height={600}
+  quality={85}
+/>
+```
+
+#### Check Bundle Size
+
+Analyze bundle size:
+
+```bash
+# Install bundle analyzer
+npm install --save-dev @next/bundle-analyzer
+
+# Analyze bundle
+ANALYZE=true npm run build
+```
+
+#### Optimize Search Index
+
+Exclude unnecessary content from search:
+
+```javascript
+// next.config.pagefind.mjs
+export default {
+  pagefind: {
+    excludeSelectors: [
+      '.nextra-sidebar',
+      '.nextra-toc',
+      'nav',
+      'header',
+      'footer',
+      '[data-pagefind-ignore]'
+    ]
+  }
+}
+```
+
+### Deployment Issues
+
+**Symptoms:**
+- Deployment fails
+- Environment variables not working in production
+- Site not accessible after deployment
+
+**Solutions:**
+
+#### Check Platform-Specific Requirements
+
+Each platform has specific requirements:
+
+**Vercel:**
+- Ensure environment variables are set in dashboard
+- Check build logs for errors
+- Verify domain configuration
+
+**Netlify:**
+- Check build settings match requirements
+- Verify publish directory is correct
+- Review deploy logs
+
+**Railway/Other platforms:**
+- Check build commands
+- Verify environment variables
+- Review platform-specific documentation
+
+#### Test Build Locally
+
+Test the production build locally:
+
+```bash
+# Build for production
+npm run build
+
+# Serve built files (if using static export)
+npx serve out
+
+# Or start production server
+npm start
+```
+
+#### Environment Variables
+
+Verify environment variables in production:
+
+```javascript
+// Add debug logging
+console.log('Environment check:', {
+  hasSessionSecret: !!process.env.SESSION_SECRET,
+  hasAuthConfig: !!(
+    process.env.AUTH_USERNAME || 
+    process.env.AUTH_USERS || 
+    process.env.AUTH_USERS_JSON
+  ),
+  nodeEnv: process.env.NODE_ENV
+})
+```
+
+## Debug Mode
+
+Enable debug mode for detailed logging:
+
+### Development Debug
+
+```bash
+# Enable debug logging
+DEBUG=true npm run dev
+```
+
+### Custom Debug Logging
+
+Add debug logging to your code:
+
+```javascript
+// lib/debug.js
+export const debug = (message, data) => {
+  if (process.env.DEBUG === 'true') {
+    console.log(`[DEBUG] ${message}`, data ? JSON.stringify(data, null, 2) : '')
+  }
+}
+
+// Usage
+import { debug } from './lib/debug'
+
+debug('Authentication attempt', { username, timestamp: Date.now() })
+```
+
+## Browser Developer Tools
+
+Use browser tools for debugging:
+
+### Console Debugging
+
+Check browser console for errors:
+
+```javascript
+// Check for JavaScript errors
+// Open browser console (F12)
+// Look for red error messages
+
+// Network tab
+// Check for failed requests
+// Verify API calls are successful
+
+// Application tab
+// Check localStorage/sessionStorage
+// Verify cookies are set correctly
+```
+
+### Network Debugging
+
+Monitor network requests:
+
+1. **Open DevTools** (F12)
+2. **Go to Network tab**
+3. **Reload page**
+4. **Check for failed requests** (red status codes)
+5. **Verify API endpoints** are responding correctly
+
+## Getting Help
+
+### Documentation Resources
+
+- 📖 [Nextra Documentation](https://nextra.site/docs)
+- ⚡ [Next.js Documentation](https://nextjs.org/docs)
+- ⚛️ [React Documentation](https://react.dev)
+
+### Community Support
+
+- 🐙 [GitHub Issues](https://github.com/we-digital/nextra-docs-starter-plus/issues)
+- 💬 [Nextra Discord](https://discord.gg/hEM84NMkRv)
+- 🌟 [Next.js Discussions](https://github.com/vercel/next.js/discussions)
+
+### Creating a Bug Report
+
+When reporting issues, include:
+
+#### System Information
+
+```bash
+# Node.js version
+node --version
+
+# Package manager version
+npm --version
+# or
+pnpm --version
+# or
+yarn --version
+
+# Operating system
+# Windows 10, macOS 12, Ubuntu 20.04, etc.
+```
+
+#### Error Information
+
+- **Exact error message** - Copy the full error text
+- **Steps to reproduce** - How to trigger the issue
+- **Expected behavior** - What should happen
+- **Actual behavior** - What actually happens
+- **Browser information** - Browser version and type
+
+#### Code Examples
+
+Include relevant code snippets:
+
+```mdx
+<!-- Problematic MDX content -->
+# My Page
+
+This content causes the issue...
+```
+
+```javascript
+// Problematic JavaScript code
+const problematicFunction = () => {
+  // Code that causes the issue
+}
+```
+
+### Before Asking for Help
+
+1. **Check this troubleshooting guide** first
+2. **Search existing issues** on GitHub
+3. **Try basic solutions** (restart server, clear cache)
+4. **Test with minimal reproduction** case
+5. **Gather all relevant information** before posting
+
+## Quick Fixes Reference
+
+### Common Commands
+
+```bash
+# Restart development server
+npm run dev
+
+# Clear cache and rebuild
+rm -rf .next && npm run build
+
+# Reinstall dependencies
+rm -rf node_modules package-lock.json && npm install
+
+# Generate new session secret
+openssl rand -base64 32
+
+# Check for updates
+npm outdated
+
+# Update packages
+npm update
+```
+
+### Environment Variables Template
+
+```bash
+# .env.local template
+SESSION_SECRET=your-32-character-random-string
+AUTH_USERNAME=admin
+AUTH_PASSWORD=your-secure-password
+# AUTH_USERS=user1:pass1,user2:pass2
+# SKIP_AUTH=true  # For development only
+```
+
+<Callout type="info">
+  Most issues can be resolved by restarting the development server, clearing cache, or checking environment variables. Try these simple fixes first before diving into complex debugging.
+</Callout> 

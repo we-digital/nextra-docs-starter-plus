@@ -1,0 +1,126 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Nextra docs template (Next.js 15, React 19, Pagefind index, hybrid mode)
+
+## General project description and scope
+
+This is a Nextra docs project, that uses latest version of Nextra docs template
+
+## Analysis Process
+
+Before responding to any request, follow these steps:
+
+1. **Request Analysis**
+   - Determine task type (code creation, debugging, architecture, etc.)
+   - Identify languages and frameworks involved
+   - Note explicit and implicit requirements
+   - Define core problem and desired outcome
+   - Consider project context and constraints
+
+2. **Solution Planning**
+   - Break down the solution into logical steps
+   - Consider modularity and reusability
+   - Identify necessary files and dependencies
+   - Evaluate alternative approaches
+   - Plan for testing and validation
+   - Use sequential thinking
+
+3. **Implementation Strategy**
+   - Choose appropriate design patterns
+   - Consider performance implications
+   - Plan for error handling and edge cases
+   - Ensure accessibility compliance
+   - Verify best practices alignment
+
+## Code Style and Structure
+
+### General Principles
+- Write concise, maintainable, and strongly typed code with accurate TypeScript implementations.
+- Embrace functional, declarative programming. Avoid OOP and classes.
+- Limit files to a maximum of 150 lines; refactor into smaller modules if exceeded.
+- Prefer iteration and modularization over duplication.
+- Use descriptive, semantic variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
+- Use camelCase for helpers and PascalCase for Components and Types.
+- Types should be prefixed with T (e.g. `TSomeType`)
+- Interfaces should be prefixed with I (e.g. `ISomeInterface`)
+- Favor named exports for components.
+- Adopt RORO (Receive an Object, Return an Object) for function parameters/returns.
+- Always attain to use DRY (Don't Repeat Yourself) principles.
+- Conduct regular code reviews and frequent refactoring sessions to ensure consistency and quality.
+- Check and improve Web Vitals (LCP, CLS, FID) to maintain performance and user experience.
+- Always use indexed Nextra-docs, Next.js-docs and React-docs
+- Search the web if you unable to identify problem or solution
+- You can try to use Browser mcp, but only in case when you really need it (where it will optimize issue solition process)
+
+### Naming Conventions
+- Use descriptive names with auxiliary verbs (isLoading, hasError)
+- Prefix event handlers with "handle" (handleClick, handleSubmit)
+- Use lowercase with dashes for directories (components/auth-wizard)
+- Favor named exports for components
+
+### TypeScript Usage
+- Use TypeScript for all code
+- Prefer interfaces over types
+- Avoid enums; use const maps instead
+- Implement proper type safety and inference
+- Use `satisfies` operator for type validation
+
+## React 19 and Next.js 15 Best Practices
+
+## React 19 and Next.js 15 Best Practices
+
+### Component Architecture
+- Favor React Server Components (RSC) where possible
+- Minimize 'use client' directives
+- Implement proper error boundaries
+- Use Suspense for async operations
+- Optimize for performance and Web Vitals
+
+### State Management
+- Use `useActionState` instead of deprecated `useFormState`
+- Leverage enhanced `useFormStatus` with new properties (data, method, action)
+- Implement URL state management with 'nuqs'
+- Minimize client-side state
+
+### Async Request APIs
+```typescript
+// Always use async versions of runtime APIs
+const cookieStore = await cookies()
+const headersList = await headers()
+const { isEnabled } = await draftMode()
+
+// Handle async params in layouts/pages
+const params = await props.params
+const searchParams = await props.searchParams
+```
+
+### Data Fetching
+- Fetch requests are no longer cached by default
+- Use `cache: 'force-cache'` for specific cached requests
+- Implement `fetchCache = 'default-cache'` for layout/page-level caching
+- Use appropriate fetching methods (Server Components, SWR, React Query)
+
+### Route Handlers
+```typescript
+// Cached route handler example
+export const dynamic = 'force-static'
+
+export async function GET(request: Request) {
+  const params = await request.params
+  // Implementation
+}
+```
+
+
+## UI Development
+
+### Styling
+- Nextra docs template does not support any Tailwind, so you should implement css styles
+- Nextra v4 which we're using uses specific utility classes with the x: prefix, consider it and proper styling integration while solving user's problem
+
+
+**Remember:** Prioritize clarity and maintainability while delivering robust, accessible, and performant solutions aligned with the latest Nextra, React 19 and Next.js 15, features and best practices.
+

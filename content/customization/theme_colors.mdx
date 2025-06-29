@@ -1,0 +1,201 @@
+# Theme Colors
+
+Learn how to easily customize your site's colors using the new centralized theming system.
+
+## Quick Color Change
+
+🎨 **Want to change your theme quickly?** Edit the file `lib/theme-config.ts`:
+
+```typescript
+// lib/theme-config.ts
+export const themeConfig: ThemeColors = {
+  brandPrimary: {
+    hue: 228,        // Primary color hue (0-360) - Blue (current)
+    saturation: 79,  // Color intensity (0-100%)
+    lightness: 46    // Color brightness (0-100%)
+  },
+  
+  backgroundColor: {
+    light: 'rgb(254, 252, 232)', // Light mode background
+    dark: 'rgb(15, 23, 42)'       // Dark mode background
+  }
+}
+```
+
+## Color Examples
+
+Try these color schemes by replacing the `themeConfig` export:
+
+### 🟢 Green Theme
+```typescript
+export const themeConfig: ThemeColors = {
+  brandPrimary: { hue: 142, saturation: 71, lightness: 45 },
+  backgroundColor: {
+    light: 'rgb(240, 253, 244)',
+    dark: 'rgb(3, 25, 9)'
+  }
+}
+```
+
+### 🟣 Purple Theme  
+```typescript
+export const themeConfig: ThemeColors = {
+  brandPrimary: { hue: 259, saturation: 94, lightness: 51 },
+  backgroundColor: {
+    light: 'rgb(250, 245, 255)',
+    dark: 'rgb(23, 15, 42)'
+  }
+}
+```
+
+### 🔴 Red Theme
+```typescript
+export const themeConfig: ThemeColors = {
+  brandPrimary: { hue: 348, saturation: 89, lightness: 46 },
+  backgroundColor: {
+    light: 'rgb(254, 242, 242)',
+    dark: 'rgb(42, 15, 23)'
+  }
+}
+```
+
+### 🟠 Orange Theme
+```typescript
+export const themeConfig: ThemeColors = {
+  brandPrimary: { hue: 25, saturation: 95, lightness: 53 },
+  backgroundColor: {
+    light: 'rgb(255, 247, 237)',
+    dark: 'rgb(42, 25, 15)'
+  }
+}
+```
+
+## How It Works
+
+This theming system uses **multiple layers** for complete theme control:
+
+### 1. **Nextra Theme Configuration**
+```jsx
+// app/layout.jsx
+<Head 
+  color={{
+    hue: themeConfig.brandPrimary.hue,        // Controls Nextra's built-in colors
+    saturation: themeConfig.brandPrimary.saturation
+  }}
+  backgroundColor={themeConfig.backgroundColor}
+/>
+```
+
+### 2. **Dynamic CSS Variable Injection**
+```jsx
+// app/layout.jsx - ThemeStyleInjector component
+function ThemeStyleInjector() {
+  const { brandPrimary } = themeConfig;
+  
+  const dynamicStyles = `
+    :root {
+      --brand-primary: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${brandPrimary.lightness}%);
+      --brand-primary-light: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.min(brandPrimary.lightness + 10, 100)}%);
+      --brand-primary-dark: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.max(brandPrimary.lightness - 10, 0)}%);
+    }
+  `;
+
+  return <style dangerouslySetInnerHTML={{ __html: dynamicStyles }} />;
+}
+```
+
+### 3. **Component Usage**
+```css
+.logout-button {
+  background: var(--brand-primary);    /* Dynamically calculated */
+}
+
+.logout-button:hover {
+  background: var(--brand-primary-dark); /* Auto-darkened variant */
+}
+```
+
+## What Changed
+
+### ❌ Old Method (Didn't Work)
+```css
+/* This approach was outdated in Nextra v4 */
+:root {
+  --nextra-primary-hue: 228;
+  --brand-primary: hsl(228, 79%, 46%); /* Static values */
+}
+```
+
+### ✅ New Method (Dynamic & Correct)
+```typescript
+// lib/theme-config.ts - Single source of truth
+export const themeConfig = {
+  brandPrimary: {
+    hue: 228,        // Controls EVERYTHING from here
+    saturation: 79,
+    lightness: 46
+  }
+}
+```
+
+```jsx
+// app/layout.jsx - Dynamic injection + Nextra configuration
+<Head color={{ hue: themeConfig.brandPrimary.hue, saturation: themeConfig.brandPrimary.saturation }} />
+<ThemeStyleInjector />  {/* Dynamically generates CSS variables */}
+```
+
+### 🎉 Key Improvements
+
+- **Dynamic CSS Variables**: CSS variables are now calculated from your theme config
+- **Automatic Variants**: Light/dark variants are automatically generated
+- **Single Source**: Change colors in one place, everything updates
+- **LogoutButton Fixed**: Now properly inherits your theme colors
+
+## Benefits
+
+- **🎯 Single source of truth** - All theme colors in one file (`lib/theme-config.ts`)
+- **🔄 Easy switching** - Uncomment different themes to try them
+- **📱 Responsive** - Works perfectly on mobile and desktop
+- **🌙 Dark mode** - Automatic dark mode color adjustments with lighter variants
+- **⚡ Performance** - Uses Nextra's optimized theming system
+- **🎨 Dynamic CSS** - CSS variables automatically generated from config
+- **🔧 LogoutButton Integration** - All components inherit your theme colors
+
+## Custom Colors
+
+You can use the theme colors in your custom components:
+
+```css
+.my-custom-button {
+  background: var(--brand-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.my-custom-button:hover {
+  background: var(--brand-primary-dark);
+}
+```
+
+Or use the utility classes:
+
+```jsx
+<div className="bg-brand-primary text-white p-4 rounded">
+  Custom component with theme colors
+</div>
+```
+
+## Next Steps
+
+1. **Edit** `lib/theme-config.ts` with your preferred colors
+2. **Save** the file and refresh your browser
+3. **See** your new theme applied instantly!
+4. **Customize** further by editing `styles/custom.css` if needed
+
+---
+
+**💡 Pro Tip**: The `brandPrimary` values in `lib/theme-config.ts` control both Nextra's built-in theming AND dynamically generate CSS variables for all custom components (including the LogoutButton). Change once, theme everywhere! 

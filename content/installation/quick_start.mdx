@@ -1,0 +1,162 @@
+import { Tabs } from 'nextra/components'
+
+# Quick start
+
+Get your documentation site up and running in just a few minutes! Follow these steps to set up nextra-docs-starter-plus.
+
+## 1. Clone the Repository
+
+First, clone the template repository to your local machine:
+
+```bash
+# Clone the template
+git clone https://github.com/we-digital/nextra-docs-starter-plus.git my-docs-site
+
+# Navigate to the project
+cd my-docs-site
+```
+
+## 2. Install Dependencies
+
+Install the required packages using your preferred package manager:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm install
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn install
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## 3. Environment Configuration
+
+Create a `.env.local` file in the root directory with your configuration:
+
+```bash
+# Generate a secure session secret
+SESSION_SECRET=your-generated-secret-key
+
+# Simple single user setup
+AUTH_ENABLED=true
+AUTH_USERS=username:password:Display Name;username2:password2:Cool Display Name 2;
+```
+
+### Generate a Secure Session Secret
+
+You need a secure random string for session encryption:
+
+<Tabs items={['Unix/Linux/macOS', 'Windows with Node.js', 'Online Generator']}>
+  <Tabs.Tab>
+    ```bash
+    openssl rand -base64 32
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    Use an online generator like [randomkeygen.com](https://randomkeygen.com/) and select "CodeIgniter Encryption Keys"
+  </Tabs.Tab>
+</Tabs>
+
+## 4. Start Development Server
+
+Launch the development server:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run dev
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn dev
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## 5. Access Your Site
+
+Open your browser and navigate to:
+
+🎉 **[http://localhost:3000](http://localhost:3000)**
+
+You should see your documentation site running!
+
+## First Steps After Installation
+
+### 1. Test Authentication
+- Click the login button
+- Use the credentials you set in your `.env.local` file
+- Verify you can access protected content
+
+### 2. Explore the Structure
+- Check out the `content/` directory
+- Look at the navigation in `content/_meta.js`
+- Review the authentication setup in `lib/`
+
+### 3. Add Your Content
+- Edit `content/index.mdx` to customize the homepage
+- Add new `.mdx` files for your documentation
+- Update `content/_meta.js` to organize navigation
+
+## Common Issues
+
+### Port Already in Use
+If port 3000 is busy, Next.js will automatically use the next available port (3001, 3002, etc.).
+
+### Environment Variables Not Working
+- Make sure your `.env.local` file is in the root directory
+- Restart the development server after adding environment variables
+- Check for typos in variable names
+
+### Authentication Not Working
+- Verify your `SESSION_SECRET` is set
+- Check that your username/password are correct
+- Ensure the `.env.local` file format is correct
+
+## Development Tips
+
+### Hot Reloading
+Changes to your content files will automatically reload the page.
+
+### TypeScript Support
+The template includes full TypeScript support. You can use `.ts` and `.tsx` files anywhere.
+
+### Debugging
+Use the browser developer tools to debug any issues. Check the console for errors.
+
+## Next Steps
+
+Now that your site is running:
+
+1. **Configure Authentication** - Set up your users in [Authentication Setup](/authentication-setup)
+2. **Add Content** - Learn how to create pages in [Creating Content](/creating-content)
+3. **Customize** - Personalize your site in [Customization](/customization)
+4. **Deploy** - Publish your site using [Deployment](/deployment)
+
+## Need Help?
+
+If you run into issues:
+
+- Check the [Troubleshooting](/troubleshooting) guide
+- Review the [Prerequisites](/prerequisites)
+- Visit our [GitHub Issues](https://github.com/we-digital/nextra-docs-starter-plus/issues) 

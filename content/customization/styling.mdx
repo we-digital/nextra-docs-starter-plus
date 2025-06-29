@@ -1,0 +1,777 @@
+import { StyledText } from '../../components/StyledText'
+
+## Styling
+
+### Custom CSS
+
+The template uses custom CSS located in `styles/`:
+
+- **`styles/custom.css`** - Global styles and theme overrides
+- **`styles/login.css`** - Authentication page specific styles
+
+#### Global Styles
+
+Edit `styles/custom.css` to customize the overall appearance:
+
+```css
+/* Custom colors */
+:root {
+  --nextra-primary-hue: 200;
+  --nextra-bg: #ffffff;
+  --nextra-fg: #000000;
+}
+
+/* Dark mode colors */
+html[class~="dark"] {
+  --nextra-bg: #111111;
+  --nextra-fg: #ffffff;
+}
+
+/* Custom fonts */
+body {
+  font-family: 'Your Custom Font', system-ui, sans-serif;
+}
+
+/* Custom button styles */
+.custom-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  padding: 12px 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.custom-button:hover {
+  transform: translateY(-2px);
+}
+```
+
+#### Login Page Styling
+
+Customize the authentication pages in `styles/login.css`:
+
+```css
+.login-container {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+```
+
+### CSS Variables
+
+Use CSS custom properties for consistent theming:
+
+```css
+:root {
+  /* Brand colors */
+  --brand-primary: #667eea;
+  --brand-secondary: #764ba2;
+  --brand-accent: #f093fb;
+  
+  /* Typography */
+  --font-primary: 'Inter', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+  
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+```
+
+## Theme Configuration
+
+### Layout Customization
+
+Configure the Nextra theme in your layout files:
+
+```jsx
+// app/layout.jsx
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <body>
+        <div className="nextra-container">
+          {/* Custom header */}
+          <header className="custom-header">
+            <div className="header-content">
+              <img src="/images/logo.png" alt="Logo" className="logo" />
+              <nav className="main-nav">
+                {/* Navigation items */}
+              </nav>
+            </div>
+          </header>
+          
+          {/* Main content */}
+          <main className="main-content">
+            {children}
+          </main>
+          
+          {/* Custom footer */}
+          <footer className="custom-footer">
+            <p>&copy; 2024 Your Company. All rights reserved.</p>
+          </footer>
+        </div>
+      </body>
+    </html>
+  )
+}
+```
+
+### Theme Colors
+
+Customize the color scheme:
+
+```css
+/* Light theme */
+:root {
+  --nextra-primary-hue: 200;
+  --nextra-primary-saturation: 100%;
+  --nextra-navbar-height: 4rem;
+  --nextra-sidebar-width: 256px;
+}
+
+/* Dark theme */
+html[class~="dark"] {
+  --nextra-primary-hue: 204;
+  --nextra-primary-saturation: 100%;
+}
+```
+
+### Typography
+
+Custom font configuration:
+
+```css
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap');
+
+/* Apply fonts */
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-feature-settings: 'cv08', 'cv09', 'cv11';
+}
+
+code {
+  font-family: 'Fira Code', monospace;
+  font-feature-settings: 'calt';
+}
+```
+
+## Protected Routes
+
+### Middleware Configuration
+
+Customize which routes require authentication by editing `middleware.ts`:
+
+```typescript
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  // Add your custom middleware logic here
+  
+  // Example: Protect specific paths
+  const protectedPaths = [
+    '/admin',
+    '/private',
+    '/internal',
+    '/team-only'
+  ]
+  
+  const pathname = request.nextUrl.pathname
+  
+  if (protectedPaths.some(path => pathname.startsWith(path))) {
+    // Check authentication
+    // Redirect to login if not authenticated
+  }
+  
+  return NextResponse.next()
+}
+
+export const config = {
+  matcher: [
+    '/admin/(.*)',
+    '/private/(.*)',
+    '/internal/(.*)',
+    '/team-only/(.*)',
+    // Add more protected routes...
+  ],
+}
+```
+
+### Role-Based Access
+
+Implement role-based route protection:
+
+```typescript
+// lib/auth-utils.ts
+export interface User {
+  username: string
+  displayName?: string
+  roles: string[]
+}
+
+export function hasRole(user: User, role: string): boolean {
+  return user.roles.includes(role)
+}
+
+export function hasAnyRole(user: User, roles: string[]): boolean {
+  return roles.some(role => user.roles.includes(role))
+}
+
+// middleware.ts
+import { getUser } from './lib/session'
+import { hasRole } from './lib/auth-utils'
+
+export async function middleware(request: NextRequest) {
+  const user = await getUser(request)
+  
+  // Admin-only routes
+  if (request.nextUrl.pathname.startsWith('/admin')) {
+    if (!user || !hasRole(user, 'admin')) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+  
+  // Editor routes
+  if (request.nextUrl.pathname.startsWith('/editor')) {
+    if (!user || !hasAnyRole(user, ['admin', 'editor'])) {
+      return NextResponse.redirect(new URL('/login', request.url))
+    }
+  }
+}
+```
+
+## Custom Components
+
+### StyledText Component
+
+The `StyledText` component is a polymorphic utility wrapper that allows you to apply any CSS class from your `styles/custom.css` file to text content. This provides a flexible way to style text throughout your documentation while maintaining consistency with your theme.
+
+#### Overview
+
+The `StyledText` component can render as any HTML element while applying custom CSS classes. It's designed to work seamlessly with the CSS classes defined in your `styles/custom.css` file and automatically integrates with your theme system.
+
+#### Basic Usage
+
+```jsx
+import { StyledText } from '../components/StyledText'
+
+<StyledText className="primary-highlighted-text">
+  Your text content here
+</StyledText>
+```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `React.ReactNode` | - | The content to be wrapped (required) |
+| `className` | `string` | `''` | CSS class name(s) to apply |
+| `as` | `React.ElementType` | `'span'` | The HTML element to render as |
+
+#### Examples
+
+**Primary Highlighted Text:**
+
+```jsx
+<StyledText className="primary-highlighted-text">
+  nextra-docs-starter-plus
+</StyledText>
+```
+
+**Different HTML Elements:**
+
+```jsx
+// Render as a heading
+<StyledText as="h3" className="brand-primary">
+  Important Heading
+</StyledText>
+
+// Render as emphasized text
+<StyledText as="em" className="brand-secondary">
+  Emphasized content
+</StyledText>
+
+// Render as a div (avoiding nested p elements)
+<StyledText as="div" className="brand-accent">
+  A styled paragraph
+</StyledText>
+```
+
+**Combining with Markdown:**
+
+```jsx
+This is regular text, but <StyledText className="primary-highlighted-text">**this text is both bold and styled**</StyledText> with our custom styling.
+```
+
+#### Available CSS Classes for StyledText
+
+**Brand Colors:**
+- `brand-primary` - Primary theme color
+- `brand-secondary` - Secondary theme color  
+- `brand-accent` - Accent theme color
+- `primary-highlighted-text` - Primary color styling
+
+**Background Colors:**
+- `bg-brand-primary` - Primary background color
+- `bg-brand-secondary` - Secondary background color
+
+**Border Colors:**
+- `border-brand-primary` - Primary border color
+
+**Button Styles:**
+- `nextra-button-primary` - Primary button styling
+- `nextra-button-secondary` - Secondary button styling
+
+#### Advanced StyledText Usage
+
+**Multiple Classes:**
+
+```jsx
+<StyledText className="brand-primary bg-brand-secondary">
+  Multi-styled text
+</StyledText>
+```
+
+**Custom CSS Classes:**
+
+```css
+/* Add to styles/custom.css */
+.my-custom-style {
+  color: var(--brand-accent);
+  font-weight: bold;
+  text-decoration: underline;
+}
+```
+
+```jsx
+<StyledText className="my-custom-style">
+  Custom styled text
+</StyledText>
+```
+
+#### StyledText Best Practices
+
+1. **Consistency**: Use predefined CSS classes from `custom.css` to maintain design consistency
+2. **Semantic HTML**: Choose appropriate HTML elements using the `as` prop
+3. **Avoid Nesting Issues**: Don't use `as="p"` in MDX content as it can create nested `<p>` elements. Use `as="div"` or `as="span"` instead
+4. **Accessibility**: Ensure color contrasts meet accessibility standards
+5. **Performance**: Avoid inline styles; use CSS classes instead
+6. **Maintainability**: Define reusable styles in `custom.css` rather than component-specific styles
+
+#### Theme Integration
+
+The `StyledText` component automatically inherits your theme configuration from `lib/theme-config.ts`. The CSS custom properties (CSS variables) are dynamically updated based on your theme settings, ensuring consistent styling across your documentation.
+
+When you change your primary theme color in `theme-config.ts`, all `StyledText` components using theme-related classes will automatically update to reflect the new colors, supporting both light and dark modes.
+
+### Creating Additional Components
+
+Add custom React components in the `components/` directory:
+
+```jsx
+// components/CustomCard.jsx
+export function CustomCard({ title, description, href, icon }) {
+  return (
+    <a href={href} className="custom-card">
+      <div className="card-icon">{icon}</div>
+      <h3 className="card-title">{title}</h3>
+      <p className="card-description">{description}</p>
+    </a>
+  )
+}
+```
+
+```css
+/* styles/custom.css */
+.custom-card {
+  display: block;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.custom-card:hover {
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-2px);
+}
+
+.card-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.card-description {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+```
+
+### Using Components in MDX
+
+Import and use custom components in your MDX files:
+
+```mdx
+import { CustomCard } from '../components/CustomCard.jsx'
+import { StyledText } from '../components/StyledText'
+
+# My Page
+
+<CustomCard 
+  title="Getting Started"
+  description="Learn the basics of using our platform"
+  href="/getting-started"
+  icon="🚀"
+/>
+
+## Using StyledText in Content
+
+### Primary Highlighted Text Example
+
+Use the `primary-highlighted-text` class to highlight important text with your theme's primary color:
+
+```mdx
+Welcome to <StyledText className="primary-highlighted-text">**nextra-docs-starter-plus**</StyledText> — a powerful documentation starter template.
+```
+
+**Rendered Result:**
+
+Welcome to <StyledText className="primary-highlighted-text">**nextra-docs-starter-plus**</StyledText> — a powerful documentation starter template.
+
+### Additional Styling Examples
+
+<div>
+<StyledText className="brand-secondary">
+  This paragraph is styled with our secondary brand color.
+</StyledText>
+</div>
+
+You can also combine it with regular markdown: This is normal text, but <StyledText className="brand-accent">this text uses our accent color</StyledText> for emphasis.
+
+### Mixed Usage in Documentation
+
+```mdx
+# Project Overview
+
+<StyledText className="primary-highlighted-text">nextra-docs-starter-plus</StyledText> provides:
+
+- 🔐 Built-in authentication system
+- 📚 Beautiful documentation layout  
+- 🎨 <StyledText className="brand-accent">Customizable theming</StyledText>
+- 🔍 Full-text search capabilities
+
+<StyledText as="h3" className="brand-primary">
+  Key Features
+</StyledText>
+
+This template combines the power of <StyledText className="primary-highlighted-text">Nextra</StyledText> with authentication.
+```
+
+**Rendered Result:**
+
+<StyledText className="primary-highlighted-text">nextra-docs-starter-plus</StyledText> provides:
+
+- 🔐 Built-in authentication system
+- 📚 Beautiful documentation layout  
+- 🎨 <StyledText className="brand-accent">Customizable theming</StyledText>
+- 🔍 Full-text search capabilities
+
+### Key Features
+
+This template combines the power of <StyledText className="primary-highlighted-text">Nextra</StyledText> with authentication.
+```
+
+## Logo and Branding
+
+### Custom Logo
+
+Replace the default logo:
+
+1. Add your logo to `public/images/logo.png`
+2. Update the layout file:
+
+```jsx
+// app/layout.jsx
+<header className="custom-header">
+  <img 
+    src="/images/logo.png" 
+    alt="Your Company Logo" 
+    className="logo"
+    width="120"
+    height="40"
+  />
+</header>
+```
+
+### Favicon
+
+Replace the favicon:
+
+1. Add your favicon to `public/favicon.ico`
+2. Add additional icon sizes:
+
+```jsx
+// app/layout.jsx
+<head>
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+</head>
+```
+
+### Brand Colors
+
+Define your brand colors consistently:
+
+```css
+:root {
+  /* Primary brand colors */
+  --brand-primary: #your-primary-color;
+  --brand-primary-dark: #your-primary-dark;
+  --brand-primary-light: #your-primary-light;
+  
+  /* Secondary colors */
+  --brand-secondary: #your-secondary-color;
+  --brand-accent: #your-accent-color;
+  
+  /* Semantic colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+}
+```
+
+## SEO and Meta Tags
+
+### Custom Meta Tags
+
+Add custom meta tags for better SEO:
+
+```jsx
+// app/layout.jsx
+<head>
+  <meta name="description" content="Your site description" />
+  <meta name="keywords" content="docs, documentation, guides" />
+  <meta name="author" content="Your Company" />
+  
+  {/* Open Graph */}
+  <meta property="og:title" content="Your Site Title" />
+  <meta property="og:description" content="Your site description" />
+  <meta property="og:image" content="/images/og-image.png" />
+  <meta property="og:url" content="https://yoursite.com" />
+  
+  {/* Twitter */}
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Your Site Title" />
+  <meta name="twitter:description" content="Your site description" />
+  <meta name="twitter:image" content="/images/twitter-image.png" />
+</head>
+```
+
+### Dynamic Meta Tags
+
+Set meta tags per page using frontmatter:
+
+```mdx
+---
+title: "Custom Page Title"
+description: "Specific page description"
+image: "/images/page-specific-image.png"
+---
+
+# Page Content
+```
+
+## Performance Optimization
+
+### Image Optimization
+
+Optimize images for better performance:
+
+```jsx
+// Use Next.js Image component
+import Image from 'next/image'
+
+<Image
+  src="/images/screenshot.png"
+  alt="Screenshot"
+  width={800}
+  height={600}
+  quality={85}
+  priority={false}
+/>
+```
+
+### Font Loading
+
+Optimize font loading:
+
+```css
+/* Preload important fonts */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+```
+
+### CSS Optimization
+
+Minimize CSS and remove unused styles:
+
+```css
+/* Use CSS containment */
+.content-section {
+  contain: layout style paint;
+}
+
+/* Optimize animations */
+.animated-element {
+  will-change: transform;
+  transform: translateZ(0);
+}
+```
+
+## Advanced Customization
+
+### Custom MDX Components
+
+Override default MDX components:
+
+```jsx
+// mdx-components.jsx
+export function useMDXComponents(components) {
+  return {
+    ...components,
+    h1: ({ children }) => (
+      <h1 className="custom-h1">{children}</h1>
+    ),
+    a: ({ href, children }) => (
+      <a href={href} className="custom-link">
+        {children}
+      </a>
+    ),
+    pre: ({ children }) => (
+      <pre className="custom-code-block">
+        {children}
+      </pre>
+    ),
+  }
+}
+```
+
+### Theme Toggle
+
+Add a custom theme toggle:
+
+```jsx
+// components/ThemeToggle.jsx
+import { useTheme } from 'next-themes'
+
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme()
+  
+  return (
+    <button
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      className="theme-toggle"
+    >
+      {theme === 'dark' ? '☀️' : '🌙'}
+    </button>
+  )
+}
+```
+
+### Custom Search
+
+Customize the search functionality:
+
+```jsx
+// components/CustomSearch.jsx
+export function CustomSearch() {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState([])
+  
+  // Custom search logic
+  const handleSearch = async (query) => {
+    // Implement your search logic
+  }
+  
+  return (
+    <div className="custom-search">
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search documentation..."
+      />
+      {/* Render results */}
+    </div>
+  )
+}
+```
+
+## Next Steps
+
+After customizing your site:
+
+1. **Test thoroughly** - Verify all customizations work correctly
+2. **Optimize performance** - Check loading times and optimize as needed
+3. **Validate accessibility** - Ensure your customizations are accessible
+4. **Plan deployment** - Review [Deployment](/deployment) considerations 

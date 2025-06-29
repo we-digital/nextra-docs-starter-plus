@@ -1,0 +1,616 @@
+import { Tabs } from 'nextra/components'
+
+# Search Configuration
+
+The template includes Pagefind for fast, full-text search functionality. Learn how to configure and customize the search experience.
+
+## Overview
+
+Pagefind is a fully static search library that creates a search index at build time. It provides:
+
+- **Fast search** - Instant results with no server required
+- **Full-text search** - Search across all your content
+- **Highlighting** - Results with search term highlighting
+- **Filters** - Search by tags, categories, and metadata
+- **Lightweight** - Minimal JavaScript footprint
+
+## Build Process
+
+The search index is automatically built during the build process:
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash
+    pnpm build  # Includes search index generation
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    npm run build  # Includes search index generation
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash
+    yarn build  # Includes search index generation
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+### Build Configuration
+
+The build process uses `next.config.pagefind.mjs` for search-enabled builds:
+
+```javascript
+import nextra from 'nextra'
+
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.tsx',
+  // Pagefind configuration
+  pagefind: {
+    indexing: true,
+    site: './out',
+    rootSelector: 'main',
+    excludeSelectors: ['[data-pagefind-ignore]']
+  }
+})
+
+export default withNextra({
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  }
+})
+```
+
+### Pre-build Script
+
+The build process includes a pre-build script that prepares the search index:
+
+```javascript
+// scripts/build-pagefind-pre.js
+const fs = require('fs')
+const path = require('path')
+
+// Configure Pagefind indexing
+const config = {
+  source: './out',
+  bundlePath: './out/_pagefind/',
+  excludeSelectors: [
+    '[data-pagefind-ignore]',
+    '.nextra-sidebar',
+    '.nextra-toc',
+    'nav',
+    'header',
+    'footer'
+  ]
+}
+
+// Run Pagefind indexing
+console.log('Building search index...')
+// Pagefind build logic here
+```
+
+## Search Features
+
+### Full-Text Search
+
+Search across all your documentation:
+
+- **Content matching** - Find text within any page
+- **Title matching** - Search page titles and headings
+- **Metadata matching** - Search frontmatter and tags
+- **Code search** - Search within code blocks
+
+### Instant Results
+
+Results appear as you type:
+
+- **Debounced search** - Optimized for performance
+- **Ranked results** - Most relevant results first
+- **Snippet preview** - Context around matches
+- **Highlighted terms** - Visual emphasis on matches
+
+### Keyboard Navigation
+
+Navigate search results with keyboard:
+
+- **Arrow keys** - Navigate between results
+- **Enter** - Open selected result
+- **Escape** - Close search
+- **Tab** - Navigate interface elements
+
+### Mobile-Friendly
+
+Optimized search experience on mobile:
+
+- **Touch-friendly** - Large touch targets
+- **Responsive design** - Adapts to screen size
+- **Fast loading** - Minimal JavaScript overhead
+- **Offline capable** - Works without internet
+
+## Customization
+
+### Search UI
+
+Customize the search interface:
+
+```css
+/* styles/custom.css */
+.search-container {
+  position: relative;
+  max-width: 400px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.search-result {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.search-result:hover {
+  background-color: #f9fafb;
+}
+
+.search-result:last-child {
+  border-bottom: none;
+}
+
+.search-result-title {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.search-result-snippet {
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.search-highlight {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+```
+
+### Search Filters
+
+Add filters to your search:
+
+```javascript
+// Custom search component with filters
+export function SearchWithFilters() {
+  const [query, setQuery] = useState('')
+  const [filters, setFilters] = useState({
+    tags: [],
+    categories: [],
+    authors: []
+  })
+  
+  const searchWithFilters = async (query, filters) => {
+    // Implement filtered search logic
+    const results = await pagefind.search(query, {
+      filters: {
+        tags: filters.tags,
+        category: filters.categories
+      }
+    })
+    
+    return results
+  }
+  
+  return (
+    <div className="search-with-filters">
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search documentation..."
+      />
+      
+      <div className="search-filters">
+        <FilterSelect
+          label="Tags"
+          options={availableTags}
+          value={filters.tags}
+          onChange={(tags) => setFilters({...filters, tags})}
+        />
+        
+        <FilterSelect
+          label="Categories"
+          options={availableCategories}
+          value={filters.categories}
+          onChange={(categories) => setFilters({...filters, categories})}
+        />
+      </div>
+    </div>
+  )
+}
+```
+
+### Search Analytics
+
+Track search usage:
+
+```javascript
+// Add search analytics
+const trackSearch = (query, resultsCount) => {
+  // Google Analytics
+  gtag('event', 'search', {
+    search_term: query,
+    results_count: resultsCount
+  })
+  
+  // Custom analytics
+  fetch('/api/analytics/search', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      query: query,
+      results: resultsCount,
+      timestamp: new Date().toISOString()
+    })
+  })
+}
+```
+
+## Content Optimization
+
+### Search-Friendly Content
+
+Optimize your content for better search results:
+
+#### Use Descriptive Headings
+
+```mdx
+# Clear, Descriptive Page Title
+
+## Specific Section Headings
+
+### Detailed Subsection Titles
+```
+
+#### Add Metadata
+
+Use frontmatter to enhance search:
+
+```mdx
+---
+title: "Complete Guide to Authentication"
+description: "Learn how to set up and configure authentication in your app"
+tags: ["authentication", "security", "users"]
+category: "guides"
+author: "John Doe"
+date: "2024-01-15"
+---
+```
+
+#### Include Keywords
+
+Naturally include relevant keywords:
+
+```mdx
+# Authentication Setup Guide
+
+This guide covers **user authentication**, **session management**, 
+and **security best practices** for your documentation site.
+
+## Topics Covered
+
+- **Login systems** and user verification
+- **Password security** and encryption
+- **Session handling** and persistence
+```
+
+### Content Exclusion
+
+Exclude content from search indexing:
+
+```mdx
+# Public Content
+
+This content will be searchable.
+
+<div data-pagefind-ignore>
+  This content will be excluded from search results.
+</div>
+
+## More Public Content
+
+This will also be searchable.
+```
+
+## Performance Optimization
+
+### Index Size Management
+
+Keep your search index optimized:
+
+#### Exclude Unnecessary Content
+
+```javascript
+// next.config.pagefind.mjs
+export default {
+  pagefind: {
+    excludeSelectors: [
+      '.nextra-sidebar',
+      '.nextra-toc', 
+      'nav',
+      'header',
+      'footer',
+      '.code-line-numbers',
+      '.search-results',
+      '[data-pagefind-ignore]'
+    ]
+  }
+}
+```
+
+#### Optimize Content Length
+
+```javascript
+// Truncate long content for search
+const optimizeForSearch = (content) => {
+  // Limit content length
+  if (content.length > 1000) {
+    return content.substring(0, 1000) + '...'
+  }
+  return content
+}
+```
+
+### Loading Optimization
+
+Optimize search loading:
+
+```javascript
+// Lazy load search
+const SearchComponent = lazy(() => import('./SearchComponent'))
+
+// Preload search data
+const preloadSearch = () => {
+  const link = document.createElement('link')
+  link.rel = 'prefetch'
+  link.href = '/_pagefind/pagefind.js'
+  document.head.appendChild(link)
+}
+```
+
+## Advanced Configuration
+
+### Custom Search Logic
+
+Implement custom search behavior:
+
+```javascript
+// Custom search with advanced filtering
+class CustomSearch {
+  constructor() {
+    this.index = null
+    this.filters = {}
+  }
+  
+  async initialize() {
+    // Load Pagefind
+    const pagefind = await import('/_pagefind/pagefind.js')
+    this.index = pagefind
+  }
+  
+  async search(query, options = {}) {
+    if (!this.index) await this.initialize()
+    
+    // Apply custom logic
+    const results = await this.index.search(query, {
+      ...options,
+      ...this.filters
+    })
+    
+    // Post-process results
+    return this.processResults(results)
+  }
+  
+  processResults(results) {
+    // Custom result processing
+    return results.map(result => ({
+      ...result,
+      // Add custom properties
+      relevanceScore: this.calculateRelevance(result),
+      category: this.extractCategory(result.url)
+    }))
+  }
+}
+```
+
+### Search Autocomplete
+
+Add autocomplete functionality:
+
+```javascript
+// Search autocomplete
+export function SearchAutocomplete() {
+  const [suggestions, setSuggestions] = useState([])
+  const [query, setQuery] = useState('')
+  
+  const generateSuggestions = async (query) => {
+    if (query.length < 2) return []
+    
+    // Get suggestions from search index
+    const results = await pagefind.search(query, { limit: 5 })
+    
+    // Extract suggestions from results
+    const suggestions = results.results.map(result => ({
+      text: result.meta.title,
+      url: result.url
+    }))
+    
+    return suggestions
+  }
+  
+  useEffect(() => {
+    const debounced = debounce(async () => {
+      if (query) {
+        const suggestions = await generateSuggestions(query)
+        setSuggestions(suggestions)
+      }
+    }, 300)
+    
+    debounced()
+  }, [query])
+  
+  return (
+    <div className="search-autocomplete">
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search..."
+      />
+      
+      {suggestions.length > 0 && (
+        <div className="suggestions">
+          {suggestions.map((suggestion, index) => (
+            <a
+              key={index}
+              href={suggestion.url}
+              className="suggestion"
+            >
+              {suggestion.text}
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**Search not working:**
+- Check that build process completed successfully
+- Verify `_pagefind` directory exists in output
+- Ensure JavaScript is enabled in browser
+
+**No results appearing:**
+- Check content is not excluded by selectors
+- Verify search index was built correctly
+- Test with simple, known terms
+
+**Search results incomplete:**
+- Check for `data-pagefind-ignore` attributes
+- Verify all content is being indexed
+- Review exclude selectors configuration
+
+### Debug Mode
+
+Enable debug logging:
+
+```javascript
+// Debug search functionality
+const debugSearch = async (query) => {
+  console.log('Searching for:', query)
+  
+  const results = await pagefind.search(query)
+  
+  console.log('Results:', results)
+  console.log('Index info:', await pagefind.index.info())
+  
+  return results
+}
+```
+
+### Performance Monitoring
+
+Monitor search performance:
+
+```javascript
+// Performance monitoring
+const monitorSearch = (query) => {
+  const start = performance.now()
+  
+  return pagefind.search(query).then(results => {
+    const duration = performance.now() - start
+    
+    console.log(`Search took ${duration}ms`)
+    
+    // Track slow searches
+    if (duration > 100) {
+      console.warn('Slow search detected:', query)
+    }
+    
+    return results
+  })
+}
+```
+
+## Best Practices
+
+### Content Strategy
+
+1. **Write descriptive headings** that users might search for
+2. **Include relevant keywords** naturally in content
+3. **Use consistent terminology** throughout documentation
+4. **Add metadata** to improve search relevance
+5. **Keep content updated** to maintain search accuracy
+
+### Technical Optimization
+
+1. **Exclude unnecessary content** from indexing
+2. **Optimize build process** for faster index generation
+3. **Monitor index size** to maintain performance
+4. **Test search functionality** regularly
+5. **Implement analytics** to understand usage patterns
+
+### User Experience
+
+1. **Provide immediate feedback** as users type
+2. **Show relevant results** prominently
+3. **Enable keyboard navigation** for accessibility
+4. **Highlight search terms** in results
+5. **Offer search suggestions** for better discoverability
+
+## Next Steps
+
+After configuring search:
+
+1. **Test thoroughly** - Verify search works across all content
+2. **Monitor usage** - Track what users are searching for
+3. **Optimize content** - Update based on search analytics
+4. **Plan deployment** - Consider [Deployment](/deployment) requirements 

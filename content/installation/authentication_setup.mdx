@@ -1,0 +1,282 @@
+# Authentication Setup
+
+Configure secure authentication for your documentation site with flexible user management options.
+
+## Single User Configuration
+
+For simple setups with just one user, use environment variables:
+
+```bash
+# .env.local
+AUTH_USERNAME=admin
+AUTH_PASSWORD=your-secure-password
+AUTH_DISPLAY_NAME=Administrator  # Optional: Display name in UI
+```
+
+This is the simplest approach for personal documentation sites or small teams.
+
+## Multiple Users Configuration
+
+### Simple Format
+
+For multiple users without display names:
+
+```bash
+# Format: "user1:pass1,user2:pass2,user3:pass3"
+AUTH_USERS=admin:admin123,developer:dev456,viewer:view789
+```
+
+### With Display Names
+
+Include display names for better user experience:
+
+```bash
+# Format: "username:password:Display Name,username2:password2:Display Name 2"
+AUTH_USERS=admin:admin123:Administrator,developer:dev456:John Developer,viewer:view789:Jane Viewer
+```
+
+### Advanced JSON Format
+
+For complex user configurations with roles and metadata:
+
+```bash
+AUTH_USERS_JSON='{
+  "admin": {
+    "password": "admin123",
+    "displayName": "Administrator",
+    "roles": ["admin"],
+    "description": "System administrator"
+  },
+  "developer": {
+    "password": "dev456",
+    "displayName": "John Developer", 
+    "roles": ["user", "developer"],
+    "description": "Development team member"
+  },
+  "viewer": {
+    "password": "view789",
+    "displayName": "Jane Viewer",
+    "roles": ["user"],
+    "description": "Content viewer"
+  }
+}'
+```
+
+## Configuration Priority
+
+The authentication system checks for users in this order:
+
+1. `AUTH_USERS_JSON` (most flexible)
+2. `AUTH_USERS` (simple multi-user)
+3. `AUTH_USERNAME` + `AUTH_PASSWORD` (single user)
+
+Use the format that best fits your needs.
+
+## Development Mode
+
+Skip authentication during development:
+
+```bash
+# Add to .env.local to disable auth in development
+SKIP_AUTH=true
+```
+
+This is useful for:
+- Development and testing
+- Content creation
+- CI/CD pipelines
+- Local debugging
+
+## Security Configuration
+
+### Session Secret
+
+Always use a strong session secret:
+
+```bash
+# Generate with:
+# openssl rand -base64 32
+SESSION_SECRET=your-generated-secret-key-here
+```
+
+### Session Duration
+
+Configure session expiration (default: 7 days):
+
+```bash
+# Session expires after 24 hours
+SESSION_DURATION=86400
+
+# Session expires after 30 days  
+SESSION_DURATION=2592000
+```
+
+### Password Requirements
+
+Enforce strong passwords:
+
+- Minimum 8 characters
+- Mix of letters, numbers, and symbols
+- Avoid common passwords
+- Use unique passwords per user
+
+## Environment Variables Reference
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `SESSION_SECRET` | JWT encryption key | `abc123...` |
+| `AUTH_ENABLED` | Enable/disable auth | `true` |
+| `AUTH_USERNAME` | Single user username | `admin` |
+| `AUTH_PASSWORD` | Single user password | `secure123` |
+| `AUTH_DISPLAY_NAME` | Single user display name | `Administrator` |
+| `AUTH_USERS` | Multiple users (simple) | `user1:pass1,user2:pass2` |
+| `AUTH_USERS_JSON` | Multiple users (advanced) | `{"user1": {...}}` |
+| `SKIP_AUTH` | Skip auth in development | `true` |
+| `SESSION_DURATION` | Session expiry (seconds) | `604800` |
+
+## User Management
+
+### Adding Users
+
+To add a new user:
+
+1. **Simple format**: Add to `AUTH_USERS` string
+2. **JSON format**: Add new user object to `AUTH_USERS_JSON`
+3. **Restart** the application to apply changes
+
+### Removing Users
+
+To remove a user:
+
+1. Delete from the environment variable
+2. Restart the application
+3. Existing sessions will remain valid until expiry
+
+### Updating Passwords
+
+To update a user's password:
+
+1. Change the password in the environment variable
+2. Restart the application
+3. User will need to log in again
+
+## Advanced Configuration
+
+### Custom Login Page
+
+Customize the login page styling by editing `styles/login.css`:
+
+```css
+/* Custom login page styles */
+.login-container {
+  background: your-custom-background;
+  /* Add your styles */
+}
+```
+
+### Custom Authentication Logic
+
+For advanced authentication needs, modify:
+
+- `lib/auth-actions.ts` - Authentication logic
+- `lib/auth-utils.ts` - Utility functions  
+- `lib/session.ts` - Session management
+
+### Integration with External Auth
+
+The template can be extended to integrate with:
+
+- **OAuth providers** (Google, GitHub, etc.)
+- **LDAP/Active Directory**
+- **Database user management**
+- **Third-party auth services**
+
+## Testing Authentication
+
+### Manual Testing
+
+1. Start the development server
+2. Navigate to a protected page
+3. Verify redirect to login
+4. Test login with valid credentials
+5. Test login with invalid credentials
+6. Verify session persistence
+
+### Automated Testing
+
+Consider adding tests for:
+
+- Login flow
+- Session management
+- Route protection
+- User validation
+
+## Production Considerations
+
+### Security Checklist
+
+- [ ] Strong session secret generated
+- [ ] HTTPS enabled
+- [ ] Strong user passwords
+- [ ] Regular password rotation
+- [ ] Environment variables secured
+- [ ] No credentials in code
+- [ ] Session duration appropriate
+- [ ] Access logs monitored
+
+### Performance
+
+- Sessions are stored in memory by default
+- Consider Redis for production scale
+- Monitor session cleanup
+- Optimize middleware performance
+
+## Troubleshooting
+
+### Common Issues
+
+**Users can't log in:**
+- Check username/password spelling
+- Verify environment variables are set
+- Ensure session secret is configured
+- Check browser console for errors
+
+**Authentication redirects not working:**
+- Verify middleware configuration
+- Check protected route patterns
+- Ensure session cookies are enabled
+
+**Sessions not persisting:**
+- Check session secret consistency
+- Verify cookie settings
+- Check session duration configuration
+
+### Debug Mode
+
+Enable debug logging by adding:
+
+```bash
+# .env.local
+DEBUG=true
+```
+
+This will log authentication events to the console.
+
+## Best Practices
+
+1. **Use environment variables** for all sensitive data
+2. **Never commit credentials** to version control
+3. **Rotate passwords regularly**
+4. **Use HTTPS in production**
+5. **Monitor failed login attempts**
+6. **Keep session secrets secure**
+7. **Regular security audits**
+
+## Next Steps
+
+After configuring authentication:
+
+1. Test the login flow thoroughly
+2. Set up your [Project Structure](/project-structure)
+3. Start [Creating Content](/creating-content)
+4. Plan your [Deployment](/deployment) strategy 

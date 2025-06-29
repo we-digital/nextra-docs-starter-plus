@@ -1,0 +1,312 @@
+---
+title: Project Structure
+sidebarTitle: Project Structure
+asIndexPage: true
+---
+# Project Structure
+
+Understanding the project structure will help you navigate and customize the template effectively.
+
+## Directory Overview
+
+```
+nextra-docs-starter-plus/
+├── app/                    # Next.js App Router
+│   ├── [[...mdxPath]]/     # Dynamic MDX routing
+│   ├── api/                # API routes
+│   ├── login/              # Authentication pages
+│   └── layout.jsx          # Root layout
+├── content/                # Documentation content
+│   ├── _meta.js            # Navigation configuration
+│   ├── index.mdx           # Homepage
+│   └── ...                 # Your documentation files
+├── components/             # React components
+├── lib/                    # Utility functions
+│   ├── auth-actions.ts     # Authentication logic
+│   ├── auth-utils.ts       # Auth utilities
+│   └── session.ts          # Session management
+├── middleware.ts           # Route protection
+├── styles/                 # CSS styles
+└── public/                 # Static assets
+```
+
+## Core Directories
+
+### `/app` - Next.js App Router
+
+The main application structure using Next.js 15 App Router:
+
+- **`[[...mdxPath]]/page.jsx`** - Dynamic routing for MDX content
+- **`api/`** - API endpoints for authentication and other services
+- **`login/`** - Authentication pages and layouts
+- **`layout.jsx`** - Root application layout
+- **`layout.static.jsx`** - Static version without authentication
+
+### `/content` - Documentation Files
+
+Your documentation content lives here:
+
+- **`_meta.js`** - Navigation structure and page ordering
+- **`index.mdx`** - Homepage content
+- **`*.mdx`** - Individual documentation pages
+- **Subdirectories** - Organized content sections
+
+### `/lib` - Utility Functions
+
+Core functionality and utilities:
+
+- **`auth-actions.ts`** - Server actions for authentication
+- **`auth-utils.ts`** - Authentication helper functions
+- **`session.ts`** - Session management and validation
+- **`*.static.ts`** - Static versions for builds without auth
+
+### `/components` - React Components
+
+Reusable UI components:
+
+- **`LogoutButton.tsx`** - Authentication logout component
+- Add your custom components here
+
+### `/styles` - Styling
+
+CSS files for styling:
+
+- **`custom.css`** - Global styles and theme customization
+- **`login.css`** - Authentication page specific styles
+
+## Key Files
+
+### `middleware.ts` - Route Protection
+
+Controls which routes require authentication:
+
+```typescript
+export const config = {
+  matcher: [
+    '/protected/(.*)',      // Protect /protected/* routes
+    '/admin/(.*)',          // Protect /admin/* routes
+    // Add more protected routes...
+  ],
+}
+```
+
+### `next.config.mjs` - Next.js Configuration
+
+Main Next.js configuration with Nextra setup:
+
+```javascript
+import nextra from 'nextra'
+
+const withNextra = nextra({
+  theme: 'nextra-theme-docs',
+  themeConfig: './theme.config.tsx'
+})
+
+export default withNextra({
+  // Your Next.js config
+})
+```
+
+### `next.config.pagefind.mjs` - Search Configuration
+
+Alternative config for building with Pagefind search:
+
+- Used during build process
+- Configures search indexing
+- Optimizes for static generation
+
+### `package.json` - Dependencies
+
+Key dependencies include:
+
+- **Next.js 15** - React framework
+- **React 19** - UI library
+- **Nextra** - Documentation framework
+- **TypeScript** - Type safety
+- **Various auth libraries** - Session management
+
+## Content Organization
+
+### Navigation Structure
+
+Configure navigation in `content/_meta.js`:
+
+```javascript
+export default {
+  index: "Getting Started",
+  "quick-start": "Quick Start",
+  "authentication": "Authentication",
+  "advanced": {
+    "title": "Advanced Topics",
+    "type": "menu",
+    "items": {
+      "customization": "Customization",
+      "deployment": "Deployment"
+    }
+  }
+}
+```
+
+### Page Hierarchy
+
+Organize content with directories:
+
+```
+content/
+├── index.mdx                    # /
+├── quick-start.mdx             # /quick-start
+├── authentication/             # /authentication/*
+│   ├── _meta.json             #   Navigation for auth section
+│   ├── setup.mdx              #   /authentication/setup
+│   └── advanced.mdx           #   /authentication/advanced
+└── guides/                     # /guides/*
+    ├── _meta.json             #   Navigation for guides
+    ├── getting-started.mdx    #   /guides/getting-started
+    └── deployment.mdx         #   /guides/deployment
+```
+
+## Authentication Files
+
+### Core Authentication
+
+- **`lib/auth-actions.ts`** - Server actions (login, logout)
+- **`lib/auth-utils.ts`** - User validation and utilities
+- **`lib/session.ts`** - Session creation and verification
+
+### Static Versions
+
+For builds without authentication:
+
+- **`lib/auth-actions.static.ts`** - No-op authentication
+- **`lib/session.static.ts`** - Mock session handling
+- **`app/layout.static.jsx`** - Layout without auth components
+
+## Build Configuration
+
+### Development vs Production
+
+The template supports different build modes:
+
+**Development:**
+- Full authentication enabled
+- Hot reloading
+- Debug capabilities
+
+**Static Build:**
+- Authentication disabled
+- Full static generation
+- Optimized for CDN deployment
+
+### Build Scripts
+
+Key npm scripts:
+
+```json
+{
+  "dev": "next dev",
+  "build": "next build",
+  "build:static": "next build with static config",
+  "start": "next start"
+}
+```
+
+## Customization Points
+
+### Theme Customization
+
+Modify these files to customize appearance:
+
+- **`styles/custom.css`** - Global styles
+- **`styles/login.css`** - Authentication styling
+- **`app/layout.jsx`** - Layout structure
+
+### Component Extension
+
+Add custom components:
+
+- Create in `/components` directory
+- Import in MDX files
+- Use throughout documentation
+
+### Functionality Extension
+
+Extend core functionality:
+
+- Add API endpoints in `/app/api`
+- Create utilities in `/lib`
+- Add middleware in `middleware.ts`
+
+## Static Assets
+
+### `/public` Directory
+
+Static files served directly:
+
+- **`images/`** - Images and graphics
+- **`_pagefind/`** - Generated search index
+- **`favicon.ico`** - Site icon
+- **Other static assets**
+
+### Asset Organization
+
+Organize assets by type:
+
+```
+public/
+├── images/
+│   ├── logos/
+│   ├── screenshots/
+│   └── icons/
+├── documents/
+├── downloads/
+└── _pagefind/          # Auto-generated
+```
+
+## TypeScript Configuration
+
+### `tsconfig.json`
+
+Configured for:
+
+- Next.js 15 support
+- React 19 compatibility
+- Strict type checking
+- Path aliases for imports
+
+### Type Definitions
+
+- **`next-env.d.ts`** - Next.js types
+- Custom types in `/lib` files
+- Component prop types
+
+## Best Practices
+
+### File Organization
+
+1. **Group related files** together
+2. **Use descriptive names** for files and directories
+3. **Keep components small** and focused
+4. **Separate concerns** (auth, content, UI)
+
+### Content Structure
+
+1. **Logical hierarchy** in content organization
+2. **Consistent naming** conventions
+3. **Clear navigation** structure
+4. **Modular content** for reusability
+
+### Code Organization
+
+1. **Separate utilities** from components
+2. **Group authentication** logic together
+3. **Use TypeScript** for type safety
+4. **Follow Next.js** conventions
+
+## Next Steps
+
+Now that you understand the structure:
+
+1. **Explore** the key files and directories
+2. **Customize** the navigation in `_meta.js`
+3. **Add** your own content and components
+4. **Learn** about [Creating Content](/creating-content) 

@@ -1,0 +1,14 @@
+.next
+.next-pagefind
+.pagefind-build
+.pagefind-temp
+.idea
+out
+node_modules
+public/_pagefind/
+next.config.backup.mjs
+lib/auth-actions.backup.ts
+lib/session.backup.ts
+pnpm-lock.yaml
+package-lock.json
+.env
