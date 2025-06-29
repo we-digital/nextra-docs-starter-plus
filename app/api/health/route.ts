@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 
+// Required for static export builds (used by Pagefind indexing)
+export const dynamic = 'force-static'
+
 export async function GET() {
   try {
     // Basic health check - you can add more sophisticated checks here
