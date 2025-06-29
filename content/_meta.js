@@ -6,7 +6,6 @@ export default {
   customization: "Customization",
   project_structure: "Project Structure",
   security: "Security Considerations",
-  troubleshooting: "Troubleshooting",
   dev_link: {
     title: "we:Digital",
     type: "page",

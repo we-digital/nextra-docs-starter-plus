@@ -12,8 +12,8 @@ import '../styles/custom.css'
 
 export const metadata = {
   title: {
-    default: 'Nextra Docs',
-    template: '%s | Nextra Docs'
+    default: 'Nextra Doc Starter +',
+    template: '%s | Nextra Docs Starter +'
   },
   description: 'Documentation for Nextra services and APIs'
 }
@@ -28,12 +28,16 @@ function ThemeStyleInjector() {
       --brand-primary: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${brandPrimary.lightness}%);
       --brand-primary-light: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.min(brandPrimary.lightness + 10, 100)}%);
       --brand-primary-dark: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.max(brandPrimary.lightness - 10, 0)}%);
+      --brand-primary-15: hsla(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${brandPrimary.lightness}%, 0.15);
+      --brand-primary-30: hsla(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${brandPrimary.lightness}%, 0.3);
     }
     
     html[class~="dark"] {
       --brand-primary: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.min(brandPrimary.lightness + 10, 100)}%);
       --brand-primary-light: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.min(brandPrimary.lightness + 20, 100)}%);
       --brand-primary-dark: hsl(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.max(brandPrimary.lightness - 5, 0)}%);
+      --brand-primary-15: hsla(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.min(brandPrimary.lightness + 10, 100)}%, 0.15);
+      --brand-primary-30: hsla(${brandPrimary.hue}, ${brandPrimary.saturation}%, ${Math.min(brandPrimary.lightness + 10, 100)}%, 0.3);
     }
   `;
 
