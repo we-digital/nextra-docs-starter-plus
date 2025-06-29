@@ -840,6 +840,128 @@ html[class~="dark"] [data-nextra-table-td] {
 }
 
 /* ================================
+   NEXTRA V4 TABLE STYLING - TARGETING x: PREFIX CLASSES
+   ================================ */
+
+/* Target Nextra v4 Tables with x: prefix utility classes */
+table[class*="x:block"][class*="nextra-scrollbar"],
+table[class*="x:overflow-x-auto"] {
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  width: 100% !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-md) !important;
+  background: transparent !important;
+}
+
+/* Nextra v4 Table Headers - Using Banner/Cards Background Pattern */
+table[class*="x:block"] th[class*="x:border-gray-300"],
+table[class*="x:overflow-x-auto"] th[class*="x:border-gray-300"],
+th[class*="x:font-semibold"][class*="x:border-gray-300"] {
+  /* Light mode: same background as banner/cards */
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(70, 58, 29) !important;
+  border-color: rgba(139, 116, 58, 0.3) !important;
+  padding: 1rem 0.75rem !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  font-size: 0.9rem !important;
+  letter-spacing: 0.025em !important;
+  text-transform: uppercase !important;
+}
+
+/* Nextra v4 Table Data Cells - Subtle Background */
+table[class*="x:block"] td[class*="x:border-gray-300"],
+table[class*="x:overflow-x-auto"] td[class*="x:border-gray-300"],
+td[class*="x:border-gray-300"][class*="x:px-4"] {
+  /* Light mode: very subtle version of background */
+  background: color-mix(in srgb, rgb(254, 252, 232) 20%, transparent) !important;
+  color: rgb(92, 77, 39) !important;
+  border-color: rgba(139, 116, 58, 0.2) !important;
+  padding: 0.875rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Nextra v4 Table Even Rows Override */
+tr[class*="x:even:bg-gray-100"] {
+  background: color-mix(in srgb, rgb(254, 252, 232) 35%, transparent) !important;
+}
+
+tr[class*="x:even:bg-gray-100"] td {
+  background: color-mix(in srgb, rgb(254, 252, 232) 35%, rgb(139, 116, 58)) !important;
+  border-color: rgba(139, 116, 58, 0.3) !important;
+}
+
+/* Nextra v4 Table Row Hover Effects */
+table[class*="x:block"] tbody tr:hover,
+table[class*="x:overflow-x-auto"] tbody tr:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 40%, transparent) !important;
+  transform: translateY(-1px) !important;
+  transition: all 0.2s ease !important;
+}
+
+table[class*="x:block"] tbody tr:hover td,
+table[class*="x:overflow-x-auto"] tbody tr:hover td {
+  background: color-mix(in srgb, rgb(254, 252, 232) 45%, rgb(139, 116, 58)) !important;
+  border-color: rgba(139, 116, 58, 0.4) !important;
+}
+
+/* Dark Mode - Nextra v4 Table Headers */
+html[class~="dark"] table[class*="x:block"] th[class*="x:border-gray-300"],
+html[class~="dark"] table[class*="x:overflow-x-auto"] th[class*="x:border-gray-300"],
+html[class~="dark"] th[class*="x:font-semibold"][class*="x:border-gray-300"] {
+  /* Dark mode: same background as banner/cards dark mode */
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(203, 213, 225) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Dark Mode - Nextra v4 Table Data Cells */
+html[class~="dark"] table[class*="x:block"] td[class*="x:border-gray-300"],
+html[class~="dark"] table[class*="x:overflow-x-auto"] td[class*="x:border-gray-300"],
+html[class~="dark"] td[class*="x:border-gray-300"][class*="x:px-4"] {
+  /* Dark mode: very subtle version of background */
+  background: color-mix(in srgb, rgb(15, 23, 42) 20%, transparent) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.2) !important;
+}
+
+/* Dark Mode - Nextra v4 Even Rows Override */
+html[class~="dark"] tr[class*="x:even:bg-gray-100"],
+html[class~="dark"] tr[class*="x:even:dark:bg-gray-600"] {
+  background: color-mix(in srgb, rgb(15, 23, 42) 35%, transparent) !important;
+}
+
+html[class~="dark"] tr[class*="x:even:bg-gray-100"] td,
+html[class~="dark"] tr[class*="x:even:dark:bg-gray-600"] td {
+  background: color-mix(in srgb, rgb(15, 23, 42) 35%, rgb(8, 12, 21)) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Dark Mode - Nextra v4 Row Hover Effects */
+html[class~="dark"] table[class*="x:block"] tbody tr:hover,
+html[class~="dark"] table[class*="x:overflow-x-auto"] tbody tr:hover {
+  background: color-mix(in srgb, rgb(15, 23, 42) 40%, transparent) !important;
+}
+
+html[class~="dark"] table[class*="x:block"] tbody tr:hover td,
+html[class~="dark"] table[class*="x:overflow-x-auto"] tbody tr:hover td {
+  background: color-mix(in srgb, rgb(15, 23, 42) 45%, rgb(8, 12, 21)) !important;
+  border-color: rgba(71, 85, 105, 0.4) !important;
+}
+
+/* Override Nextra v4 specific border utilities */
+[class*="x:border-gray-300"] {
+  border-color: rgba(139, 116, 58, 0.2) !important;
+}
+
+html[class~="dark"] [class*="x:dark:border-gray-600"] {
+  border-color: rgba(71, 85, 105, 0.2) !important;
+}
+
+/* ================================
    ENHANCED NEXTRA COMPONENTS (OTHER)
    ================================ */
 
