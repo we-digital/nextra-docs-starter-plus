@@ -100,7 +100,7 @@ export default async function RootLayout({ children }) {
         <Layout
           navbar={navbarWithAuth}
           pageMap={pageMap}
-          docsRepositoryBase="https://github.com/we-digital/nextra-docs-starter-plus/edit/main"
+          docsRepositoryBase="https://github.com/we-digital/nextra-docs-starter-plus/blob/main"
           editLink="Edit this page on GitHub"
           search={<Search />}
           footer={footer}
