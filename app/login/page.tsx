@@ -20,7 +20,7 @@ export default function LoginPage() {
                 height={ 30 }
                 className="login-logo"
             />
-            Nextra Docs
+            Nextra Docs Starter +
           </h2>
           <p className="login-subtitle">
             Enter your credentials to access the documentation

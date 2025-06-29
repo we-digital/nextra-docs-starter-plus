@@ -1,5 +1,5 @@
 .login-container {
-  min-height: 100vh;
+  min-height: 80vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,6 +14,7 @@
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
   border: 1px solid #334155;
   padding: 2.5rem;
+  margin-bottom: 2.5rem;
   width: 100%;
   max-width: 400px;
 }
@@ -75,8 +76,8 @@
 
 .form-input:focus {
   outline: none;
-  border-color: hsl(348, 89%, 55%);
-  box-shadow: 0 0 0 3px hsla(348, 89%, 55%, 0.15);
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-primary-15);
 }
 
 .form-input:disabled {
@@ -112,7 +113,7 @@
 .login-button {
   width: 100%;
   padding: 0.875rem 1rem;
-  background: linear-gradient(135deg, hsl(348, 89%, 55%) 0%, hsl(348, 89%, 46%) 100%);
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -124,14 +125,14 @@
 }
 
 .login-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, hsl(348, 89%, 50%) 0%, hsl(348, 89%, 40%) 100%);
+  background: linear-gradient(135deg, var(--brand-primary-light) 0%, var(--brand-primary-dark) 100%);
   transform: translateY(-1px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .login-button:focus {
   outline: none;
-  box-shadow: 0 0 0 3px hsla(348, 89%, 55%, 0.3);
+  box-shadow: 0 0 0 3px var(--brand-primary-30);
 }
 
 .login-button:disabled {
@@ -184,8 +185,8 @@
   }
 
   .form-input:focus {
-    border-color: hsl(348, 89%, 55%);
-    box-shadow: 0 0 0 3px hsla(348, 89%, 55%, 0.15);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--brand-primary-15);
   }
 
   .form-input::placeholder {
