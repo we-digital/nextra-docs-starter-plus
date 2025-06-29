@@ -1,0 +1,35 @@
+services:
+  nextra-dev:
+    container_name: nextra-docs-dev
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      # Enable file watching for hot reload in Docker
+      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      # Preserve node_modules in container (performance optimization)
+      - /app/node_modules
+      # Preserve .next build cache
+      - /app/.next
+    restart: unless-stopped
+    # Enable stdin and tty for interactive development
+    stdin_open: true
+    tty: true
+    networks:
+      - nextra-network
+
+networks:
+  nextra-network:
+    driver: bridge
+
+volumes:
+  node_modules:
+  next_cache: 

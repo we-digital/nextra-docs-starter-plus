@@ -8,6 +8,9 @@ const nextConfig = {
   // Disable development indicators (compilation indicator, route info, etc.)
   devIndicators: false,
   
+  // Enable standalone output for Docker production builds
+  output: 'standalone',
+  
   // Modern Turbopack configuration (replaces experimental.turbo)
   turbopack: {
     // Enable tree shaking for better performance

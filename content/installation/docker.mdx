@@ -1,0 +1,239 @@
+# Docker Setup
+
+This guide explains how to run your Nextra documentation app using Docker with hot reload support for development and optimized builds for production.
+
+## Prerequisites
+
+Before getting started with Docker, ensure you have:
+
+- **Docker Desktop** installed and running
+- **Docker Compose v2** (included with Docker Desktop)
+
+## Quick Start
+
+### Development Environment
+
+The project uses **pnpm** as the package manager, so the Dockerfile is optimized for pnpm instead of npm.
+
+#### Start Development Server
+
+```bash
+npm run docker:dev
+# or with pnpm
+pnpm run docker:dev
+```
+
+Or run manually:
+
+```bash
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+The application will be available at `http://localhost:3000` with:
+- ✅ Hot reload for all file changes  
+- ✅ Volume mounting for source directories
+- ✅ Fast refresh and live reloading
+- ✅ Source maps for debugging
+- ✅ Optimized pnpm package management
+
+### Production Environment
+
+For production builds:
+
+```bash
+npm run docker:prod
+```
+
+Or manually:
+
+```bash
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+## Configuration
+
+### Volume Mounting Strategy
+
+The Docker setup uses strategic volume mounting:
+
+#### Development Mode
+- **Source Code Mount**: `.:/app` - Entire project mounted as volume
+- **Node Modules Preservation**: `/app/node_modules` - Container dependencies preserved
+- **Build Cache**: `/app/.next` - Next.js build cache maintained
+
+#### Environment Variables
+```bash
+WATCHPACK_POLLING=true     # Enables file change polling
+CHOKIDAR_USEPOLLING=true   # Backup polling mechanism
+```
+
+### File Structure
+
+```
+nextra-docs-starter-plus/
+├── Dockerfile                    # Multi-stage Docker build
+├── docker-compose.dev.yml        # Development environment
+├── docker-compose.prod.yml       # Production environment
+├── .dockerignore                 # Build exclusions
+├── app/                          # Next.js app directory
+├── components/                   # React components
+├── content/                      # MDX documentation
+├── lib/                          # Utility libraries
+├── public/                       # Static assets
+├── scripts/                      # Build scripts
+└── styles/                       # CSS styles
+```
+
+## Available Commands
+
+### Docker Compose Commands
+
+```bash
+# Development
+npm run docker:dev           # Start development environment
+npm run docker:dev:down      # Stop development environment
+
+# Production  
+npm run docker:prod          # Start production environment
+npm run docker:prod:down     # Stop production environment
+```
+
+### Direct Docker Commands
+
+```bash
+# Build images
+npm run docker:build:dev     # Build development image
+npm run docker:build:prod    # Build production image
+
+# Run containers
+docker run -p 3000:3000 nextra-docs:dev
+docker run -p 3000:3000 nextra-docs:prod
+```
+
+## Multi-Stage Build Architecture
+
+The Dockerfile implements a multi-stage build with optimized layers:
+
+1. **base** - Node.js Alpine foundation
+2. **deps** - Dependency installation and caching
+3. **development** - Development environment with full toolchain
+4. **builder** - Production build compilation
+5. **production** - Minimal runtime with security hardening
+
+## Hot Reload Configuration
+
+Development hot reload is enabled through:
+
+- **Volume Mounting**: Live source code synchronization
+- **Polling Configuration**: `WATCHPACK_POLLING=true` for Docker compatibility
+- **Dependency Isolation**: Container node_modules preserved for performance
+- **Build Cache Persistence**: Faster subsequent builds
+
+## Performance Optimizations
+
+### Development Optimizations
+- Cached dependency installation
+- Preserved build artifacts
+- Optimized file watching
+- Efficient volume mounting
+
+### Production Optimizations
+- Multi-stage build size reduction
+- Production-only dependencies
+- Standalone Next.js output
+- Security-hardened runtime
+- Health check integration
+
+## Troubleshooting
+
+### Hot Reload Issues
+
+If hot reload isn't working:
+
+1. Verify `WATCHPACK_POLLING=true` environment variable
+2. Check volume mount configuration
+3. Ensure Docker has project directory access
+4. Restart Docker Desktop if necessary
+
+### Performance Problems
+
+For slow performance:
+
+1. Avoid mounting `node_modules` from host
+2. Increase Docker Desktop resources
+3. Use bind mounts on Windows/Mac
+4. Monitor container resource usage
+
+### Build Failures
+
+Common build issues:
+
+1. Check `.dockerignore` exclusions
+2. Verify all required files are copied
+3. Ensure standalone output in `next.config.mjs`
+4. Validate dependency versions
+
+### Port Conflicts
+
+If port 3000 is unavailable, modify docker-compose files:
+
+```yml
+ports:
+  - "3001:3000"  # Use alternative port
+```
+
+## Environment Variables
+
+Add custom environment variables to `.env.local` or docker-compose files:
+
+```yml
+environment:
+  - NODE_ENV=development
+  - CUSTOM_VAR=value
+  - WATCHPACK_POLLING=true
+```
+
+## Package Manager: pnpm vs npm
+
+This project uses **pnpm** for enhanced performance:
+
+### Advantages
+- **Faster installations** through hard linking
+- **Disk space efficiency** with shared dependencies
+- **Better parallelization** than npm
+- **Deterministic builds** with frozen lockfiles
+
+### Switching to npm
+
+If you prefer npm:
+
+1. Remove pnpm files:
+   ```bash
+   rm pnpm-lock.yaml .npmrc
+   ```
+
+2. Generate npm lockfile:
+   ```bash
+   npm install
+   ```
+
+3. Update Dockerfile commands from `pnpm` to `npm`
+
+## Best Practices
+
+1. **Use development setup** for active development
+2. **Test production builds** before deployment
+3. **Keep dependencies updated** in package.json and Dockerfile
+4. **Monitor resources** during development
+5. **Maintain .dockerignore** for build efficiency
+
+## Getting Help
+
+If you encounter issues:
+
+- Verify Docker Desktop is running
+- Check Docker Compose v2 availability
+- Ensure file permissions are correct
+- Review Docker Desktop sharing settings
+
+For connection issues, see [Docker Troubleshooting](/troubleshooting/docker_troubleshooting) for detailed solutions.

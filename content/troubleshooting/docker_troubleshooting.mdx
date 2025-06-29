@@ -1,0 +1,310 @@
+# Docker Troubleshooting
+
+Common Docker connectivity issues and their solutions for running the Nextra documentation starter.
+
+## Common Error: Docker Pipe Connection Failed
+
+### Error Message
+```bash
+unable to get image 'nextra-docs-starter-plus-nextra-dev': error during connect: Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.47/images/nextra-docs-starter-plus-nextra-dev/json": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+```
+
+### Root Causes
+This error typically occurs when:
+- Docker Desktop is not running or not fully started
+- Missing Windows features (Containers, Hyper-V)
+- WSL2 vs Hyper-V backend conflicts
+- BitLocker/FVE registry policy blocking containers
+- Docker Engine service not running
+
+## Quick Solutions
+
+### Solution 1: Start Docker Desktop First!
+
+**This fixes 90% of cases** - The most common mistake is running Docker commands before Docker Desktop is started.
+
+```bash
+# ❌ Wrong: Running commands before Docker Desktop is ready
+npm run docker:dev
+
+# ✅ Correct: Always start Docker Desktop first
+# 1. Search "Docker Desktop" in Start menu and launch it
+# 2. WAIT for it to fully load (whale icon stops spinning)
+# 3. Look for "Docker Desktop is running" message
+# 4. THEN run your commands:
+npm run docker:dev
+```
+
+**How to verify Docker Desktop is ready:**
+- Right-click Docker system tray icon → Should show "Docker Desktop is running"
+- The whale icon should not be spinning/loading
+- Docker Desktop window shows green "running" status
+
+### Solution 2: Enable Windows Features
+
+Missing Windows features are the second most common cause.
+
+**Using PowerShell (Recommended - Run as Administrator):**
+```powershell
+# Enable required Windows features
+Enable-WindowsOptionalFeature -Online -FeatureName $("Microsoft-Hyper-V", "Containers") -All
+
+# Restart your computer after this command
+```
+
+**Using Windows Features GUI:**
+1. Press `Win + R` → type `appwiz.cpl` → Enter
+2. Click "Turn Windows features on or off"
+3. Enable these features:
+   - ✅ **Containers**
+   - ✅ **Hyper-V** (if available)
+   - ✅ **Windows Subsystem for Linux**
+   - ✅ **Virtual Machine Platform**
+4. Click OK and **restart your computer**
+
+**Verify installation after restart:**
+```bash
+# Check Docker installation
+docker --version
+docker compose version
+docker info
+```
+
+### Solution 3: Fix BitLocker Registry Policy
+
+This registry fix has solved many persistent issues.
+
+**Run as Administrator in PowerShell:**
+```powershell
+# Check if the problematic registry key exists
+Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FVE" -Name "FDVDenyWriteAccess" -ErrorAction SilentlyContinue
+
+# If it exists and is set to 1, change it to 0
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FVE" -Name "FDVDenyWriteAccess" -Value 0
+
+# Restart Docker Desktop after this change
+```
+
+### Solution 4: Switch Docker Backend
+
+Try switching between WSL2 and Hyper-V backends.
+
+**In Docker Desktop Settings:**
+1. Right-click Docker icon → Settings
+2. Go to "General"
+3. Toggle "Use WSL 2 instead of Hyper-V":
+   - If checked → Uncheck it (use Hyper-V)
+   - If unchecked → Check it (use WSL2)
+4. Apply & Restart Docker Desktop
+
+**If using WSL2, verify integration:**
+- Go to "Resources" → "WSL Integration"
+- Ensure integration is enabled for your WSL distro
+
+**Restart WSL if needed:**
+```bash
+# In PowerShell as Administrator
+wsl --shutdown
+wsl
+```
+
+## Advanced Troubleshooting
+
+### Check Windows Services
+
+Verify Docker services are running properly.
+
+**Using PowerShell (Run as Administrator):**
+```powershell
+# Check Docker service status
+Get-Service | Where-Object {$_.Name -like "*docker*"}
+
+# Start Docker services if needed
+Start-Service "Docker Desktop Service"
+
+# Restart all Docker services
+Restart-Service "Docker Desktop Service"
+```
+
+**Check Named Pipes:**
+```powershell
+# List Docker-related pipes
+[System.IO.Directory]::GetFiles("\\.\pipe\") | Select-String docker
+
+# Should see pipes like:
+# \\.\pipe\docker_engine
+# \\.\pipe\dockerDesktopLinuxEngine
+```
+
+### Test Docker Connectivity
+
+Run these commands to verify Docker is working:
+
+```bash
+# Simple connectivity test
+docker run hello-world
+
+# List containers
+docker ps -a
+
+# Check Docker system info
+docker system info
+```
+
+## Package Manager Issues
+
+### Error: "npm ci can only install with existing package-lock.json"
+
+This project uses **pnpm** but the Dockerfile tries to run **npm ci**.
+
+**Solution A: Update Dockerfile to use pnpm (Recommended)**
+```dockerfile
+FROM node:18-alpine AS base
+RUN npm install -g pnpm
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+```
+
+**Solution B: Generate package-lock.json**
+```bash
+# Remove pnpm lockfile and use npm
+rm pnpm-lock.yaml
+npm install
+# This creates package-lock.json for Docker
+```
+
+### Error: "Lockfile not compatible with current pnpm"
+
+Version mismatch between local pnpm and Docker container.
+
+**Solution: Pin pnpm version in Dockerfile**
+```dockerfile
+# Install specific pnpm version
+RUN npm install -g pnpm@8  # Use version compatible with your lockfile
+```
+
+## Environment-Specific Issues
+
+### Windows-Specific Fixes
+
+**Hyper-V Conflicts:**
+If you have VirtualBox or other virtualization software:
+```bash
+# Disable Hyper-V (requires restart)
+bcdedit /set hypervisorlaunchtype off
+
+# Re-enable Hyper-V (requires restart)
+bcdedit /set hypervisorlaunchtype auto
+```
+
+**Required Windows Features:**
+- Windows Subsystem for Linux
+- Virtual Machine Platform
+- Hyper-V (Windows Pro/Enterprise only)
+- Containers
+
+### Hot Reload Issues
+
+If hot reload isn't working in development:
+
+1. Verify environment variables in `docker-compose.dev.yml`:
+   ```yaml
+   environment:
+     - WATCHPACK_POLLING=true
+     - CHOKIDAR_USEPOLLING=true
+   ```
+
+2. Check volume mounting configuration
+3. Ensure Docker has access to project directory
+4. Restart Docker Desktop if necessary
+
+### Port Conflicts
+
+If port 3000 is already in use:
+
+```yaml
+# In docker-compose.dev.yml
+ports:
+  - "3001:3000"  # Use alternative port
+```
+
+## Verification Steps
+
+After applying fixes, test your setup:
+
+```bash
+# Test Docker basic functionality
+docker run --rm alpine echo "Docker is working!"
+
+# Test Docker Compose
+docker compose --help
+
+# Test development environment
+npm run docker:dev
+```
+
+**Expected success output:**
+```bash
+[+] Building 0.5s (12/12) FINISHED
+[+] Running 1/1
+ ✔ Container nextra-docs-dev  Created
+ ✔ Container nextra-docs-dev  Started
+
+nextra-docs-dev  | Ready - started server on 0.0.0.0:3000
+```
+
+## Emergency Fixes
+
+### Complete Docker Reset
+
+If nothing else works, try a complete reset:
+
+1. **Close Docker Desktop completely**
+2. **End all Docker processes in Task Manager**
+3. **Reset Docker Desktop:**
+   - Docker Desktop Settings → "Troubleshoot" → "Reset to factory defaults"
+   - ⚠️ **Warning:** This removes all containers and images
+
+### Reinstall Docker Desktop
+
+As a last resort:
+1. Uninstall Docker Desktop completely
+2. Download latest version from [docker.com](https://docker.com)
+3. Install fresh copy
+4. Enable required Windows features
+5. Configure backend (WSL2 vs Hyper-V)
+
+## Getting Additional Help
+
+If you're still experiencing issues:
+
+1. **Check Docker Desktop logs:**
+   - Docker Desktop → Troubleshoot → View logs
+
+2. **Run Docker Desktop diagnostics:**
+   - Docker Desktop → Troubleshoot → Run diagnostics
+
+3. **Community resources:**
+   - [Docker Desktop GitHub Issues](https://github.com/docker/desktop/issues)
+   - [Docker Community Forums](https://forums.docker.com/)
+   - [Docker Documentation](https://docs.docker.com/)
+
+## Success Stories
+
+These exact solutions have worked for real users:
+
+> **"Just Start Docker Desktop First"** - The most common fix
+> "I figured out my problem. I didn't run docker desktop first… running docker desktop created the VM and all is well" - Docker Forums
+
+> **"Enable Windows Features"** - Second most common fix
+> `Enable-WindowsOptionalFeature -Online -FeatureName $("Microsoft-Hyper-V", "Containers") -All` solved it
+
+> **"BitLocker Registry Fix"** - For persistent issues
+> `Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Policies\Microsoft\FVE' -Name 'FDVDenyWriteAccess' -Value 0` fixed the pipe connection error
+
+---
+
+**Most issues are resolved by simply starting Docker Desktop first and waiting for it to fully load before running any Docker commands.**

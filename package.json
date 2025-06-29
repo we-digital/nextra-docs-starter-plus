@@ -6,7 +6,14 @@
     "dev": "next dev",
     "prebuild": "node scripts/build-pagefind-pre.js",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up --build",
+    "docker:dev:down": "docker-compose -f docker-compose.dev.yml down",
+    "docker:prod": "docker-compose -f docker-compose.prod.yml up --build",
+    "docker:prod:down": "docker-compose -f docker-compose.prod.yml down",
+    "docker:build:dev": "docker build --target development -t nextra-docs:dev .",
+    "docker:build:prod": "docker build --target production -t nextra-docs:prod .",
+    "docker:clean": "docker system prune -f && docker volume prune -f"
   },
   "repository": {
     "type": "git",
