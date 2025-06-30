@@ -998,7 +998,6 @@ table[class*="nextra-table"],
   width: 100%;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--shadow-md);
   background: transparent;
 }
 
@@ -1098,7 +1097,6 @@ html[class~="dark"] .nextra-table tbody tr:hover td {
   overflow-x: auto;
   margin: 1.5rem 0;
   border-radius: 12px;
-  box-shadow: var(--shadow-md);
 }
 
 /* Nextra Table Component Headers */
@@ -1138,13 +1136,21 @@ html[class~="dark"] [data-nextra-table-td] {
 /* Target Nextra v4 Tables with x: prefix utility classes */
 table[class*="x:block"][class*="nextra-scrollbar"],
 table[class*="x:overflow-x-auto"] {
-  border-collapse: collapse !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
   margin: 1.5rem 0 !important;
   width: 100% !important;
   border-radius: 12px !important;
   overflow: hidden !important;
-  box-shadow: var(--shadow-md) !important;
   background: transparent !important;
+  /* Improved responsive behavior */
+  display: block !important;
+  max-width: 100% !important;
+  /* Smooth scrolling */
+  scroll-behavior: smooth !important;
+  /* Clean scrollbar styling */
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(139, 116, 58, 0.3) transparent !important;
 }
 
 /* Nextra v4 Table Headers - Using Banner/Cards Background Pattern */
@@ -1155,12 +1161,10 @@ th[class*="x:font-semibold"][class*="x:border-gray-300"] {
   background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
   color: rgb(70, 58, 29) !important;
   border-color: rgba(139, 116, 58, 0.3) !important;
-  padding: 1rem 0.75rem !important;
-  font-weight: 600 !important;
+  padding: 0.2rem 0.75rem !important;
+  font-weight: 700 !important;
   text-align: left !important;
-  font-size: 0.9rem !important;
-  letter-spacing: 0.025em !important;
-  text-transform: uppercase !important;
+  font-size: 0.75rem !important;
 }
 
 /* Nextra v4 Table Data Cells - Subtle Background */
@@ -1186,18 +1190,11 @@ tr[class*="x:even:bg-gray-100"] td {
   border-color: rgba(139, 116, 58, 0.3) !important;
 }
 
-/* Nextra v4 Table Row Hover Effects */
-table[class*="x:block"] tbody tr:hover,
-table[class*="x:overflow-x-auto"] tbody tr:hover {
-  background: color-mix(in srgb, rgb(254, 252, 232) 40%, transparent) !important;
-  transform: translateY(-1px) !important;
-  transition: all 0.2s ease !important;
-}
-
 table[class*="x:block"] tbody tr:hover td,
 table[class*="x:overflow-x-auto"] tbody tr:hover td {
-  background: color-mix(in srgb, rgb(254, 252, 232) 45%, rgb(139, 116, 58)) !important;
+  background: color-mix(in srgb, rgb(254, 252, 232) 85%, rgb(139, 116, 58)) !important;
   border-color: rgba(139, 116, 58, 0.4) !important;
+  transition: all 0.25s ease !important;
 }
 
 /* Dark Mode - Nextra v4 Table Headers */
@@ -1251,6 +1248,136 @@ html[class~="dark"] table[class*="x:overflow-x-auto"] tbody tr:hover td {
 
 html[class~="dark"] [class*="x:dark:border-gray-600"] {
   border-color: rgba(71, 85, 105, 0.2) !important;
+}
+
+/* ================================
+   TABLE CORNER BORDER RADIUS
+   ================================ */
+
+/* Top-left corner: first header cell */
+table[class*="x:block"] thead tr:first-child th:first-child,
+table[class*="x:overflow-x-auto"] thead tr:first-child th:first-child,
+table[class*="x:block"][class*="nextra-scrollbar"] thead tr:first-child th:first-child {
+  border-top-left-radius: 12px !important;
+  position: relative;
+}
+
+/* Top-right corner: last header cell */
+table[class*="x:block"] thead tr:first-child th:last-child,
+table[class*="x:overflow-x-auto"] thead tr:first-child th:last-child,
+table[class*="x:block"][class*="nextra-scrollbar"] thead tr:first-child th:last-child {
+  border-top-right-radius: 12px !important;
+  position: relative;
+}
+
+/* Bottom-left corner: first cell in last row */
+table[class*="x:block"] tbody tr:last-child td:first-child,
+table[class*="x:overflow-x-auto"] tbody tr:last-child td:first-child,
+table[class*="x:block"][class*="nextra-scrollbar"] tbody tr:last-child td:first-child {
+  border-bottom-left-radius: 12px !important;
+  position: relative;
+}
+
+/* Bottom-right corner: last cell in last row */
+table[class*="x:block"] tbody tr:last-child td:last-child,
+table[class*="x:overflow-x-auto"] tbody tr:last-child td:last-child,
+table[class*="x:block"][class*="nextra-scrollbar"] tbody tr:last-child td:last-child {
+  border-bottom-right-radius: 12px !important;
+  position: relative;
+}
+
+/* Handle edge case where table has no tbody (only thead) */
+table[class*="x:block"]:not(:has(tbody)) thead tr:last-child th:first-child,
+table[class*="x:overflow-x-auto"]:not(:has(tbody)) thead tr:last-child th:first-child {
+  border-bottom-left-radius: 12px !important;
+  position: relative;
+}
+
+table[class*="x:block"]:not(:has(tbody)) thead tr:last-child th:last-child,
+table[class*="x:overflow-x-auto"]:not(:has(tbody)) thead tr:last-child th:last-child {
+  border-bottom-right-radius: 12px !important;
+  position: relative;
+}
+
+/* Additional specificity for corner cells to override any conflicting styles */
+table[class*="x:border-gray-300"] thead tr:first-child th:first-child[class*="x:border-gray-300"] {
+  border-top-left-radius: 12px !important;
+}
+
+table[class*="x:border-gray-300"] thead tr:first-child th:last-child[class*="x:border-gray-300"] {
+  border-top-right-radius: 12px !important;
+}
+
+table[class*="x:border-gray-300"] tbody tr:last-child td:first-child[class*="x:border-gray-300"] {
+  border-bottom-left-radius: 12px !important;
+}
+
+table[class*="x:border-gray-300"] tbody tr:last-child td:last-child[class*="x:border-gray-300"] {
+  border-bottom-right-radius: 12px !important;
+}
+
+/* ================================
+   RESPONSIVE TABLE ENHANCEMENTS
+   ================================ */
+
+/* WebKit Scrollbar Styling for Tables */
+table[class*="x:block"]::-webkit-scrollbar,
+table[class*="x:overflow-x-auto"]::-webkit-scrollbar {
+  height: 8px;
+}
+
+table[class*="x:block"]::-webkit-scrollbar-track,
+table[class*="x:overflow-x-auto"]::-webkit-scrollbar-track {
+  background: color-mix(in srgb, rgb(254, 252, 232) 50%, transparent);
+  border-radius: 4px;
+}
+
+table[class*="x:block"]::-webkit-scrollbar-thumb,
+table[class*="x:overflow-x-auto"]::-webkit-scrollbar-thumb {
+  background: rgba(139, 116, 58, 0.3);
+  border-radius: 4px;
+}
+
+table[class*="x:block"]::-webkit-scrollbar-thumb:hover,
+table[class*="x:overflow-x-auto"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(139, 116, 58, 0.5);
+}
+
+/* Dark mode scrollbar */
+html[class~="dark"] table[class*="x:block"]::-webkit-scrollbar-track,
+html[class~="dark"] table[class*="x:overflow-x-auto"]::-webkit-scrollbar-track {
+  background: color-mix(in srgb, rgb(15, 23, 42) 50%, transparent);
+}
+
+html[class~="dark"] table[class*="x:block"]::-webkit-scrollbar-thumb,
+html[class~="dark"] table[class*="x:overflow-x-auto"]::-webkit-scrollbar-thumb {
+  background: rgba(71, 85, 105, 0.3);
+}
+
+html[class~="dark"] table[class*="x:block"]::-webkit-scrollbar-thumb:hover,
+html[class~="dark"] table[class*="x:overflow-x-auto"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(71, 85, 105, 0.5);
+}
+
+/* Ensure proper table width and prevent content overflow */
+table[class*="x:block"] {
+  min-width: 100% !important;
+  table-layout: auto !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  table[class*="x:block"],
+  table[class*="x:overflow-x-auto"] {
+    margin: 1rem -1rem !important;
+    border-radius: 0 !important;
+  }
+  
+  table[class*="x:block"] th,
+  table[class*="x:block"] td {
+    min-width: 120px !important;
+    white-space: nowrap !important;
+  }
 }
 
 /* ================================
