@@ -1161,10 +1161,10 @@ th[class*="x:font-semibold"][class*="x:border-gray-300"] {
   background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
   color: rgb(70, 58, 29) !important;
   border-color: rgba(139, 116, 58, 0.3) !important;
-  padding: 0.2rem 0.75rem !important;
+  padding: 0.65rem 0.75rem !important;
   font-weight: 700 !important;
   text-align: left !important;
-  font-size: 0.75rem !important;
+  font-size: 0.8rem !important;
 }
 
 /* Nextra v4 Table Data Cells - Subtle Background */
