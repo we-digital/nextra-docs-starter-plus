@@ -7,17 +7,17 @@
   /* Primary theme colors are dynamically injected by ThemeStyleInjector component */
   /* --brand-primary, --brand-primary-light, --brand-primary-dark are auto-calculated */
   /* ✅ LogoutButton and all components now properly inherit your theme colors */
-  
+
   /* Secondary Colors for custom components */
   --brand-secondary: hsl(200, 80%, 50%);
   --brand-accent: hsl(280, 75%, 60%);
-  
+
   /* Semantic Colors */
   --success: #10b981;
   --warning: #f59e0b;
   --error: #ef4444;
   --info: #3b82f6;
-  
+
   /* Custom Shadow Variables */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -28,12 +28,12 @@
 html[class~="dark"] {
   /* 🌙 Primary brand colors are dynamically injected with lighter variants for dark mode */
   /* --brand-primary, --brand-primary-light, --brand-primary-dark are auto-calculated */
-  
+
   --success: #34d399;
   --warning: #fbbf24;
   --error: #f87171;
   --info: #60a5fa;
-  
+
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
@@ -211,7 +211,7 @@ html[class~="dark"] button[aria-label*="sidebar"]:hover {
   background: color-mix(in srgb, rgb(254, 252, 232) 60%, rgb(139, 116, 58)) !important;
   border-color: rgba(139, 116, 58, 0.5) !important;
   transform: translateY(-2px) !important;
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(139, 116, 58, 0.15),
     0 4px 10px rgba(0, 0, 0, 0.05) !important;
 }
@@ -265,7 +265,7 @@ html[class~="dark"] .nextra-cards a:hover {
   /* Slightly more intense version for hover in dark mode */
   background: color-mix(in srgb, rgb(15, 23, 42) 50%, rgb(8, 12, 21)) !important;
   border-color: rgba(71, 85, 105, 0.5) !important;
-  box-shadow: 
+  box-shadow:
     0 8px 25px rgba(8, 12, 21, 0.3),
     0 4px 10px rgba(0, 0, 0, 0.2) !important;
 }
@@ -310,8 +310,8 @@ html[class~="dark"] [data-card] .icon {
   left: 0 !important;
   right: 0 !important;
   height: 3px !important;
-  background: linear-gradient(90deg, 
-    var(--brand-primary) 0%, 
+  background: linear-gradient(90deg,
+    var(--brand-primary) 0%,
     var(--brand-primary-light) 100%) !important;
   opacity: 0 !important;
   transition: opacity 0.3s ease !important;
@@ -338,7 +338,7 @@ html[class~="dark"] [data-card] .icon {
   header .app-title-text {
     display: none !important;
   }
-  
+
   /* Hide "Welcome," text on mobile, keep display name */
   .welcome-text,
   [data-nextra-navbar] .welcome-text,
@@ -652,44 +652,336 @@ aside.nextra-sidebar li:not(.active) > button:hover {
    NEXTRA CODE BLOCK STYLING
    ================================ */
 
-/* Code block background and border-radius styling */
-pre[class*="x:bg-white"],
-pre[class*="bg-white"] {
-  /* Using theme light background (warm cream) but darker */
-  background: color-mix(in srgb, rgb(254, 252, 232) 85%, black) !important;
-  border-radius: 14px !important;
+/* Remove conflicting general pre styles - let specific Nextra code block styles handle this */
+
+/* ================================
+   NEXTRA V4 CODE BLOCK STYLING - COMPLETE IMPLEMENTATION
+   ================================ */
+
+/* Main Code Block Wrapper */
+.nextra-code {
+  position: relative;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  /* Remove border-radius and shadow from wrapper - let inner elements handle their own styling */
 }
 
-/* Dark mode code blocks */
-html[class~="dark"] pre[class*="x:dark:bg-black"],
-html[class~="dark"] pre[class*="dark:bg-black"] {
-  /* Using theme dark background (dark slate) but darker */
-  background: color-mix(in srgb, rgb(15, 23, 42) 85%, black) !important;
-  border-radius: 14px !important;
+/* ================================
+   CODE BLOCKS WITH FILENAME HEADER
+   ================================ */
+
+/* Filename Header - Using Same Background as Banner/Cards */
+.nextra-code div[class*="x:bg-gray-100"] {
+  /* Light mode: same background as banner/cards */
+  background: color-mix(in srgb, rgb(254, 252, 232) 70%, rgb(139, 116, 58)) !important;
+  color: rgb(70, 58, 29) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  border-bottom: none !important;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 0.75rem 1rem !important;
+  font-weight: 600 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.025em !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  height: 3rem !important;
 }
 
-/* Additional targeting for Nextra v4 code blocks */
-.nextra-content pre,
-div[class*="nextra"] pre,
-article pre {
-  border-radius: 14px !important;
+/* Filename Header Icon */
+.nextra-code div[class*="x:bg-gray-100"] svg {
+  color: rgb(70, 58, 29) !important;
+  width: 1rem !important;
+  height: 1rem !important;
+  flex-shrink: 0 !important;
 }
 
-/* Light mode - fallback targeting */
-pre[class*="text-"]:not([class*="dark:"]) {
-  background: color-mix(in srgb, rgb(254, 252, 232) 85%, black) !important;
-  border-radius: 14px !important;
+/* Filename Text */
+.nextra-code div[class*="x:bg-gray-100"] span {
+  color: rgb(70, 58, 29) !important;
+  font-weight: 600 !important;
+  truncate: true !important;
 }
 
-/* Dark mode - fallback targeting */
-html[class~="dark"] pre[class*="text-"] {
-  background: color-mix(in srgb, rgb(15, 23, 42) 85%, black) !important;
-  border-radius: 14px !important;
+/* Copy Button in Header */
+.nextra-code div[class*="x:bg-gray-100"] button {
+  background: color-mix(in srgb, rgb(254, 252, 232) 60%, rgb(139, 116, 58)) !important;
+  color: rgb(70, 58, 29) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  border-radius: 6px !important;
+  padding: 0.375rem !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  margin-left: auto !important;
 }
 
-/* Override any inline styles that might conflict */
-pre[style*="border-radius"] {
-  border-radius: 14px !important;
+.nextra-code div[class*="x:bg-gray-100"] button:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 50%, rgb(139, 116, 58)) !important;
+  border-color: rgba(139, 116, 58, 0.5) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+/* Pre Element when it has a filename header (rounded-b-md) */
+.nextra-code pre[class*="x:rounded-b-md"] {
+  /* Light mode: slightly darker version of banner/cards background */
+  background: color-mix(in srgb, rgb(254, 252, 232) 85%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  border-top: none !important;
+  border-radius: 0 0 12px 12px !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  overflow-x: auto !important;
+}
+
+/* Floating buttons for code blocks with header (positioned lower due to header) */
+.nextra-code pre[class*="x:rounded-b-md"] div[class*="x:top-14"] {
+  position: absolute !important;
+  top: 3.5rem !important; /* Adjusted for header height */
+  right: 1rem !important;
+  display: flex !important;
+  gap: 0.5rem !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  z-index: 10 !important;
+}
+
+/* ================================
+   CODE BLOCKS WITHOUT FILENAME HEADER (STANDALONE)
+   ================================ */
+
+/* Pre Element when it has NO header (rounded-md) */
+.nextra-code pre[class*="x:rounded-md"]:not([class*="x:rounded-b-md"]) {
+  /* Light mode: slightly darker version of banner/cards background */
+  background: color-mix(in srgb, rgb(254, 252, 232) 85%, rgb(139, 116, 58)) !important;
+  color: rgb(92, 77, 39) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  border-radius: 12px !important;
+  padding: 1rem !important;
+  margin: 0 !important;
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  overflow-x: auto !important;
+}
+
+/* Floating buttons for standalone code blocks (positioned higher) */
+.nextra-code pre[class*="x:rounded-md"]:not([class*="x:rounded-b-md"]) div[class*="x:top-2"] {
+  position: absolute !important;
+  top: 0.5rem !important;
+  right: 1rem !important;
+  display: flex !important;
+  gap: 0.5rem !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  z-index: 10 !important;
+}
+
+/* ================================
+   COMMON STYLES FOR ALL CODE BLOCKS
+   ================================ */
+
+/* Code Element Inside Pre */
+.nextra-code pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-size: inherit !important;
+  color: inherit !important;
+}
+
+/* Show floating buttons on hover */
+.nextra-code:hover pre div[class*="x:opacity-0"],
+.nextra-code pre:focus-within div[class*="x:opacity-0"] {
+  opacity: 1 !important;
+}
+
+/* Floating Action Buttons */
+.nextra-code pre div[class*="x:opacity-0"] button {
+  background: color-mix(in srgb, rgb(254, 252, 232) 60%, rgb(139, 116, 58)) !important;
+  color: rgb(70, 58, 29) !important;
+  border: 1px solid rgba(139, 116, 58, 0.3) !important;
+  border-radius: 6px !important;
+  padding: 0.375rem !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.nextra-code pre div[class*="x:opacity-0"] button:hover {
+  background: color-mix(in srgb, rgb(254, 252, 232) 50%, rgb(139, 116, 58)) !important;
+  border-color: rgba(139, 116, 58, 0.5) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Button Icons */
+.nextra-code button svg {
+  width: 1rem !important;
+  height: 1rem !important;
+  color: inherit !important;
+}
+
+/* Syntax Highlighting Variables - Using Theme Colors */
+.nextra-code pre code {
+  --shiki-light: rgb(92, 77, 39);
+  --shiki-dark: rgb(148, 163, 184);
+  --shiki-light-bg: transparent;
+  --shiki-dark-bg: transparent;
+}
+
+/* Line Highlighting */
+.nextra-code pre code span[data-highlighted-line] {
+  background: rgba(139, 116, 58, 0.15) !important;
+  display: block !important;
+  border-radius: 5px;
+  border-top-left-radius: 2px;
+  border-bottom-left-radius: 2px;
+  padding: 0 0.5rem !important;
+  margin: 0 0.25rem !important;
+  border-left: 2px solid var(--brand-primary) !important;
+}
+
+/* ================================
+   DARK MODE STYLES
+   ================================ */
+
+/* Dark Mode - Filename Header */
+html[class~="dark"] .nextra-code div[class*="x:bg-gray-100"],
+html[class~="dark"] .nextra-code div[class*="x:dark:bg-neutral-900"] {
+  /* Dark mode: same background as banner/cards dark mode */
+  background: color-mix(in srgb, rgb(15, 23, 42) 60%, rgb(8, 12, 21)) !important;
+  color: rgb(203, 213, 225) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+html[class~="dark"] .nextra-code div[class*="x:bg-gray-100"] svg,
+html[class~="dark"] .nextra-code div[class*="x:dark:bg-neutral-900"] svg {
+  color: rgb(203, 213, 225) !important;
+}
+
+html[class~="dark"] .nextra-code div[class*="x:bg-gray-100"] span,
+html[class~="dark"] .nextra-code div[class*="x:dark:bg-neutral-900"] span {
+  color: rgb(203, 213, 225) !important;
+}
+
+/* Dark Mode - Pre Elements (both with and without headers) */
+html[class~="dark"] .nextra-code pre[class*="x:bg-white"],
+html[class~="dark"] .nextra-code pre[class*="x:dark:bg-black"] {
+  /* Dark mode: slightly darker version of banner/cards background */
+  background: color-mix(in srgb, rgb(15, 23, 42) 85%, rgb(8, 12, 21)) !important;
+  color: rgb(148, 163, 184) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Dark Mode - All Buttons */
+html[class~="dark"] .nextra-code button {
+  background: color-mix(in srgb, rgb(15, 23, 42) 50%, rgb(8, 12, 21)) !important;
+  color: rgb(203, 213, 225) !important;
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+html[class~="dark"] .nextra-code button:hover {
+  background: color-mix(in srgb, rgb(15, 23, 42) 40%, rgb(8, 12, 21)) !important;
+  border-color: rgba(71, 85, 105, 0.5) !important;
+}
+
+/* Dark Mode Line Highlighting */
+html[class~="dark"] .nextra-code pre code span[data-highlighted-line] {
+  background: rgba(71, 85, 105, 0.15) !important;
+  border-left-color: var(--brand-primary-light) !important;
+}
+
+/* ================================
+   UTILITY CLASS OVERRIDES
+   ================================ */
+
+/* Override Nextra v4 utility classes with theme colors */
+.nextra-code [class*="x:text-gray-700"] {
+  color: rgb(70, 58, 29) !important;
+}
+
+html[class~="dark"] .nextra-code [class*="x:text-gray-200"],
+html[class~="dark"] .nextra-code [class*="x:dark:text-gray-200"] {
+  color: rgb(203, 213, 225) !important;
+}
+
+.nextra-code [class*="x:border-gray-300"] {
+  border-color: rgba(139, 116, 58, 0.3) !important;
+}
+
+html[class~="dark"] .nextra-code [class*="x:border-neutral-700"],
+html[class~="dark"] .nextra-code [class*="x:dark:border-neutral-700"] {
+  border-color: rgba(71, 85, 105, 0.3) !important;
+}
+
+/* Override ring styles and clean up inner elements */
+.nextra-code pre[class*="x:ring-1"],
+.nextra-code pre[class*="ring-"],
+.nextra-code code[class*="ring-"] {
+  box-shadow: none !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+}
+
+/* Clean up inner code elements - remove any inherited styling */
+.nextra-code pre code,
+.nextra-code code {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remove any conflicting shadows from pre elements */
+.nextra-code pre {
+  box-shadow: none !important;
+}
+
+/* ================================
+   ACCESSIBILITY & RESPONSIVE
+   ================================ */
+
+/* Focus States for Accessibility */
+.nextra-code button:focus {
+  outline: 2px solid var(--brand-primary) !important;
+  outline-offset: 2px !important;
+}
+
+/* Responsive Design for Code Blocks */
+@media (max-width: 768px) {
+  .nextra-code {
+    margin: 1rem -1rem;
+    border-radius: 0;
+  }
+  
+  .nextra-code div[class*="x:bg-gray-100"] {
+    border-radius: 0 !important;
+  }
+  
+  .nextra-code pre {
+    border-radius: 0 !important;
+  }
+  
+  .nextra-code pre div[class*="x:opacity-0"] {
+    opacity: 1 !important;
+  }
+}
+
+/* Ensure proper stacking order */
+.nextra-code {
+  z-index: 1;
+}
+
+.nextra-code div[class*="x:bg-gray-100"] {
+  z-index: 5;
+}
+
+.nextra-code pre div[class*="x:opacity-0"] {
+  z-index: 10;
 }
 
 /* ================================
@@ -965,11 +1257,7 @@ html[class~="dark"] [class*="x:dark:border-gray-600"] {
    ENHANCED NEXTRA COMPONENTS (OTHER)
    ================================ */
 
-/* Enhanced code blocks */
-.nextra-content pre {
-  border-radius: 8px;
-  box-shadow: var(--shadow-sm);
-}
+/* Enhanced code blocks - removed to prevent conflicts with specific .nextra-code styling */
 
 /* Tab panel improvements */
 div[role="tabpanel"] {
@@ -993,7 +1281,7 @@ div[role="tabpanel"] {
   .logout-button {
     border: 2px solid white;
   }
-  
+
   .nextra-callout {
     border: 2px solid;
   }
